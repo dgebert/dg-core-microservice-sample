@@ -1,2 +1,7 @@
-# fuzzy-guide
-Dg's repo of awesome ideas and code
+# Microservice Sample in ASP.NET Core
+
+## Introduction
+
+## Sample
+
+
