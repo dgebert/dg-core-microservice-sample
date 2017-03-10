@@ -11,7 +11,25 @@ namespace dg.common.validation
             {
                 ErrorCode = failure.ErrorCode,
                 ErrorMessage = failure.ErrorMessage,
+                AttemptedValue = failure.AttemptedValue,
+                PropertyName = failure.PropertyName
             };
         }
+
+
+        public static IRuleBuilderOptions<T, TProperty> 
+            WithErrorInfo<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, 
+                                       string propertyName, string errorMessage, int errorCode)
+        {
+            return 
+                rule
+                    .WithName(propertyName)
+                    .WithMessage(errorMessage)
+                    .WithErrorCode(errorCode.ToString());
+        }
+
     }
+
+  
+
 }
