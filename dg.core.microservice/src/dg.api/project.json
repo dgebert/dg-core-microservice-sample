@@ -18,6 +18,11 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
+
+    "Swashbuckle.AspNetCore": "1.0.0-rc3",
+    "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0-rc3",
+    "Swashbuckle.AspNetCore.SwaggerUI": "1.0.0-rc3",
+
     "FluentValidation.AspNetCore": "6.4.0-rc4",
 
     "dg.common": "1.0.0-*",
