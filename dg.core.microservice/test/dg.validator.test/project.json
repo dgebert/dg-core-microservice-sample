@@ -1,14 +1,15 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
-
     "xunit": "2.2.0",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "FluentAssertions": "4.19.2",
     "FluentValidation.AspNetCore": "6.4.0-rc4",
-    "NSubstitute": "2.0.1-rc"
-
+    "NSubstitute": "2.0.1-rc",
+    
+    "dg.contract": "1.0.0-*",
+    "dg.validator": "1.0.0-*"
   },
 
   "testRunner": "xunit",

@@ -31,35 +31,8 @@ namespace Absg.Common.Validation.DemoApi.Controllers
       //      _logger.LogInformation(LoggingEvents.LIST_ITEMS, "Getting all people");
             var result = await Task.Factory.StartNew(() =>
             {
-                return new List<Person> {
-                    new Person
-                    {
-                        Id = 100,
-                        FirstName = "Mike",
-                        LastName = "Pense",
-                        Email = "dumass@aol.com",
-                        BirthDate = new System.DateTime(1959, 11, 10),
-                        ModifiedOn = System.DateTime.UtcNow,
-                    },
-                     new Person
-                    {
-                        Id = 100,
-                        FirstName = "Bill",
-                        LastName = "Gifford",
-                        Email = "joe.plumber@yahoo.com",
-                        BirthDate = new System.DateTime(1965, 05, 10),
-                        ModifiedOn = System.DateTime.UtcNow,
-                    },
-                      new Person
-                    {
-                        Id = 100,
-                        FirstName = "Jane",
-                        LastName = "Reilly",
-                        Email = "jane.reilly@yahoo.com",
-                        BirthDate = new System.DateTime(1970, 02, 28),
-                        ModifiedOn = System.DateTime.UtcNow,
-                    },
-                };
+                var people = _peopleService.GetAll();
+                return people;
             });
 
             return Ok(result);
@@ -70,31 +43,30 @@ namespace Absg.Common.Validation.DemoApi.Controllers
         {
             var result = await Task.Factory.StartNew(() =>
             {
-                return new Person
-                {
-                    Id = 100,
-                    FirstName = "Joe",
-                    LastName = "Plumber",
-                    Email = "joe.plumber@aol.com",
-                    BirthDate = new System.DateTime(1965, 05, 10),
-                    ModifiedOn = System.DateTime.UtcNow,
-
-                };
+                var person = _peopleService.Get(id);
+                return person;
             });
+
+            if (result == null)
+            {
+                return NotFound();
+            }
 
             return Ok(result);
         }
+
         // Validation solution 1 - explict call to validator
         [HttpPost("people1")]
         public async Task<IActionResult> AddPerson1([FromBody] Person person)
         {
+
             var validationResult = new PersonValidator().Validate(person);
             if (!validationResult.IsValid)
             {
                 return new BadRequestObjectResult(validationResult.Errors);
             }
 
-            return Ok(person);
+            return await AddPerson(person);
         }
 
         // Validation solution 2 - validation via ActionFilterAttribute (ValidateInputAttribute)
@@ -102,34 +74,36 @@ namespace Absg.Common.Validation.DemoApi.Controllers
         [ValidateInput]
         public async Task<IActionResult> AddPerson2([FromBody] Person person)
         {
-            var result = await Task.Factory.StartNew(() =>
-            {
-                return person;
-            });
-
-            return Ok(result);
+            return await AddPerson(person);
         }
 
         // Validation solution 3 - validation via registered IActionFilter (ValidateInputFilter) in Startup.ConfigureServices()
         [HttpPost("people4")]
         public async Task<IActionResult> AddPerson3([FromBody] Person person)
         {
+            return await AddPerson(person);
+        }
+
+        private async Task<IActionResult> AddPerson(Person p)
+        {
             var result = await Task.Factory.StartNew(() =>
             {
-                return person;
+                var personInDb = _peopleService.Create(p);
+                return personInDb;
             });
 
             return Ok(result);
         }
 
 
-
         [HttpPut("people")]
+        [ValidateInput]
         public async Task<IActionResult> Update([FromBody]Person person)
         {
             var result = await Task.Factory.StartNew(() =>
             {
-                return person;
+                var personInDb = _peopleService.Update(person);
+                return personInDb;
             });
 
             return Ok(result);
@@ -138,14 +112,18 @@ namespace Absg.Common.Validation.DemoApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await Task.Factory.StartNew(() =>
+            bool result = await Task.Factory.StartNew(() =>
             {
-                return 1;
+                return _peopleService.Delete(id);
             });
+
+            if (!result)
+            {
+                return NotFound();
+            }
 
             return Ok();
         }
-
 
 
         [HttpGet("people/ping")]

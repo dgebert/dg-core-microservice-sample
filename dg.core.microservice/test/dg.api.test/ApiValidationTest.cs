@@ -25,7 +25,7 @@ namespace dg.api.test
 
 
         [Fact]
-        public async Task Explicit_Validation_Test()
+        public async Task GivenApiWithExplicitValidation_WhenInvoked_ShouldReturnBadRequest_WithErrors()
         {
             try
             {

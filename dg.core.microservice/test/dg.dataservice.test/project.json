@@ -15,6 +15,9 @@
     "dg.repository": "1.0.0-*"
   },
 
+  "testRunner": "xunit",
+
+
   "frameworks": {
     "netcoreapp1.1": {
       "imports": "portable-net45+win8",
@@ -26,6 +29,5 @@
 
       }
     }
-  },
-  "testRunner": "xunit"
+  }
 }
