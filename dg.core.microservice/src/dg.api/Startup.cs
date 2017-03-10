@@ -7,8 +7,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 
 using Swashbuckle.AspNetCore.Swagger;
+using dg.common.exceptionhandling;
 using dg.dataservice;
 using dg.repository.Models;
+
 
 namespace dg.api
 {
@@ -30,12 +32,16 @@ namespace dg.api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(
+                config =>
+                {
+                    config.Filters.Add(typeof(ApiExceptionFilter));
+                }
+            );
 
             // Register services 
-            services.AddScoped<IPeopleService, PeopleSqlService>();
-            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(Configuration["DefaultConnection"]));
-
+            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddScoped<IPeopleService>(x => new PeopleSqlService(x.GetService<PeopleContext>()));
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -46,6 +52,11 @@ namespace dg.api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 

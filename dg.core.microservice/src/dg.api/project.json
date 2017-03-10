@@ -6,7 +6,7 @@
     },
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.0",
-    "Microsoft.AspNetCore.Routing": "1.1.0",
+    "Microsoft.AspNetCore.Routing": "1.1.1",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0",
@@ -18,18 +18,18 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
-
     "Swashbuckle.AspNetCore": "1.0.0-rc3",
     "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0-rc3",
     "Swashbuckle.AspNetCore.SwaggerUI": "1.0.0-rc3",
-
     "FluentValidation.AspNetCore": "6.4.0-rc4",
 
     "dg.common": "1.0.0-*",
+    "dg.common.exceptionhandling": "1.0.0-*",
+    "dg.common.logging": "1.0.0-*",
+    "dg.common.validation": "1.0.0-*",
     "dg.contract": "1.0.0-*",
     "dg.dataservice": "1.0.0-*",
-    "dg.validator": "1.0.0-*",
-    "dg.common.validation": "1.0.0-*"
+    "dg.validator": "1.0.0-*"
   },
 
   "tools": {

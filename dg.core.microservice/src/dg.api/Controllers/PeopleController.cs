@@ -6,7 +6,7 @@ using dg.common.validation;
 using dg.contract;
 using dg.dataservice;
 using dg.validator;
-
+using dg.common.logging;
 
 namespace Absg.Common.Validation.DemoApi.Controllers
 {
@@ -15,17 +15,20 @@ namespace Absg.Common.Validation.DemoApi.Controllers
     {
         private IPeopleService _peopleService;
         private ILogger _logger;
-
-        public PeopleController(IPeopleService service, ILogger logger)
-         {
+  
+        
+              public PeopleController(IPeopleService service)
+//        public PeopleController(IPeopleService service, ILogger logger)
+        {
             _peopleService = service;
-            _logger = logger;
+         //   _logger = logger;
         }
 
 
         [HttpGet("people")]
         public async Task<IActionResult> GetAllPeople()
         {
+      //      _logger.LogInformation(LoggingEvents.LIST_ITEMS, "Getting all people");
             var result = await Task.Factory.StartNew(() =>
             {
                 return new List<Person> {
