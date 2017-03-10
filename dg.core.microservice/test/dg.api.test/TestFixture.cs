@@ -36,7 +36,7 @@ namespace dg.api.test
               .Configure(app => app.UseMvc())
 
               // Configure services - data service, fluentvalidation, validators
-              .ConfigureServices(s => s.AddScoped<IPeopleService, PeopleSqlService>())
+              .ConfigureServices(s => s.AddScoped<IPeopleService>(x => new PeopleSqlService(null)))
               .ConfigureServices(s => ConfigureFluentValidation<PersonValidator>(s))
               ;
 
@@ -94,7 +94,6 @@ namespace dg.api.test
             }
         }
 
-
         public StringContent BuildRequestContent(Person person)
         {
             var json = JsonConvert.SerializeObject(person);
@@ -110,8 +109,9 @@ namespace dg.api.test
         }
     }
 
-    public class TestFixture2 : TestFixture
+    public class TextFixtureWithValidationAcyionFilter : TestFixture
     {
+        // No need to configure Validators explicitly., This filter locates validator for contract 
         protected override IMvcBuilder ConfigureFluentValidation<T>(IServiceCollection services)
         {
             var mvcBuilder = base.ConfigureFluentValidation<T>(services);

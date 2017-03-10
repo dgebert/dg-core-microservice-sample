@@ -70,7 +70,7 @@ namespace Absg.Common.Validation.DemoApi.Controllers
         }
 
         // Validation solution 2 - validation via ActionFilterAttribute (ValidateInputAttribute)
-        [HttpPost("people3")]
+        [HttpPost("people2")]
         [ValidateInput]
         public async Task<IActionResult> AddPerson2([FromBody] Person person)
         {
@@ -78,7 +78,7 @@ namespace Absg.Common.Validation.DemoApi.Controllers
         }
 
         // Validation solution 3 - validation via registered IActionFilter (ValidateInputFilter) in Startup.ConfigureServices()
-        [HttpPost("people4")]
+        [HttpPost("people3")]
         public async Task<IActionResult> AddPerson3([FromBody] Person person)
         {
             return await AddPerson(person);

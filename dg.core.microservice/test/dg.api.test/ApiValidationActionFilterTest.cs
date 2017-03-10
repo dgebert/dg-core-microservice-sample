@@ -8,11 +8,11 @@ using dg.common.validation;
 
 namespace dg.api.test
 {
-    public class ApiValidationActionFilterTest : IClassFixture<TestFixture2>
+    public class ApiValidationActionFilterTest : IClassFixture<TextFixtureWithValidationAcyionFilter>
     {
-        private TestFixture2 _fixture;
+        private TextFixtureWithValidationAcyionFilter _fixture;
 
-        public ApiValidationActionFilterTest(TestFixture2 fixture)
+        public ApiValidationActionFilterTest(TextFixtureWithValidationAcyionFilter fixture)
         {
             _fixture = fixture;
         }
@@ -22,9 +22,13 @@ namespace dg.api.test
         {
             try
             {
-                var p = new Person() { FirstName = "Name is too long" };
+                var p = new Person()
+                {
+                    FirstName = "supercalifragilisticexpialidocious",
+                    LastName = "Willis"
+                };
 
-                var response = await _fixture.Client.PostAsync("people4", _fixture.BuildRequestContent(p));
+                var response = await _fixture.Client.PostAsync("people3", _fixture.BuildRequestContent(p));
 
                 response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
 
