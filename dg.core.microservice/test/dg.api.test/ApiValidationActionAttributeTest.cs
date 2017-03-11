@@ -17,6 +17,8 @@ namespace dg.api.test
         private HttpClient _client;
         private TestFixtureWithValidationActionAttribute _fixture;
 
+
+        // TODO:  these tests are for validation filters.  Should configure DB in Test fixture to use in-memory db
         public ApiValidationActionAttributeTest(TestFixtureWithValidationActionAttribute fixture)
         {
             _fixture = fixture;
@@ -35,7 +37,7 @@ namespace dg.api.test
                     LastName = "Willis"
                 };
 
-                var response = await _client.PostAsync("people1", _fixture.BuildRequestContent(p));
+                var response = await _client.PostAsync("people", _fixture.BuildRequestContent(p));
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
