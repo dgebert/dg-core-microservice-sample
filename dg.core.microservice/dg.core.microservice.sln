@@ -39,8 +39,6 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dg.common.exceptionhandling
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dg.common.logging", "src\dg.common.logging\dg.common.logging.xproj", "{DDD91077-9D3D-4A1E-8B3C-D931275CA34A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dg.common", "src\dg.common\dg.common.xproj", "{8C78FA24-8096-46C0-83DF-963EA8F818A0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,10 +99,6 @@ Global
 		{DDD91077-9D3D-4A1E-8B3C-D931275CA34A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDD91077-9D3D-4A1E-8B3C-D931275CA34A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDD91077-9D3D-4A1E-8B3C-D931275CA34A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C78FA24-8096-46C0-83DF-963EA8F818A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C78FA24-8096-46C0-83DF-963EA8F818A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C78FA24-8096-46C0-83DF-963EA8F818A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C78FA24-8096-46C0-83DF-963EA8F818A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +117,5 @@ Global
 		{AC09EA82-DE8A-4E3B-B425-7BBE57DD1BDA} = {ACECD8DE-A508-4E92-8B7F-E12CF01C7114}
 		{5E4EE710-A6BD-49C1-B0AF-5E038303D51D} = {ACECD8DE-A508-4E92-8B7F-E12CF01C7114}
 		{DDD91077-9D3D-4A1E-8B3C-D931275CA34A} = {ACECD8DE-A508-4E92-8B7F-E12CF01C7114}
-		{8C78FA24-8096-46C0-83DF-963EA8F818A0} = {ACECD8DE-A508-4E92-8B7F-E12CF01C7114}
 	EndGlobalSection
 EndGlobal
