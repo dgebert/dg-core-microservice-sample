@@ -1,4 +1,6 @@
-﻿delete from Person
+﻿use [People]
+
+delete from Person
 
 insert into Person (Id, FirstName, LastName, Email, PhoneNumber, BirthDate, ModifiedOn ) 
   values(1, 'Joe', 'Plumber', 'joe.plumber@aol.com', '214-567-9780', '10/25/1965 2:00:00 PM', getdate())

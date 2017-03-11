@@ -55,7 +55,15 @@ namespace Absg.Common.Validation.DemoApi.Controllers
             return Ok(result);
         }
 
-        // Validation solution 1 - explict call to validator
+        // Validation solution 1 - validation via ActionFilterAttribute (ValidateInputAttribute)
+        [HttpPost("people2")]
+        [ValidateInput]
+        public async Task<IActionResult> AddPerson([FromBody] Person person)
+        {
+            return await AddPersonImpl(person);
+        }
+
+        // Validation solution 2 - explict call to validator
         [HttpPost("people1")]
         public async Task<IActionResult> AddPerson1([FromBody] Person person)
         {
@@ -66,25 +74,18 @@ namespace Absg.Common.Validation.DemoApi.Controllers
                 return new BadRequestObjectResult(validationResult.Errors);
             }
 
-            return await AddPerson(person);
+            return await AddPersonImpl(person);
         }
 
-        // Validation solution 2 - validation via ActionFilterAttribute (ValidateInputAttribute)
-        [HttpPost("people2")]
-        [ValidateInput]
-        public async Task<IActionResult> AddPerson2([FromBody] Person person)
-        {
-            return await AddPerson(person);
-        }
 
         // Validation solution 3 - validation via registered IActionFilter (ValidateInputFilter) in Startup.ConfigureServices()
-        [HttpPost("people3")]
-        public async Task<IActionResult> AddPerson3([FromBody] Person person)
+        [HttpPost("people2")]
+        public async Task<IActionResult> AddPerson2([FromBody] Person person)
         {
-            return await AddPerson(person);
+            return await AddPersonImpl(person);
         }
 
-        private async Task<IActionResult> AddPerson(Person p)
+        private async Task<IActionResult> AddPersonImpl(Person p)
         {
             var result = await Task.Factory.StartNew(() =>
             {

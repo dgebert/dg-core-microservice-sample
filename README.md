@@ -40,7 +40,9 @@ If you install Visual Studio 2017, all .NET Core components are included
 
 ![](./CoreWebApiArchitecture.png "Microsservice Web API Architecture")
 
-Example: People service
+### Example: People Service 
+The sample microservice implementant is a people service which provides CRUD access to a backend People db.  A data service encapsulates the different db data access implementations. Currently there are two DB implementations: SQL Server and Document DB (no SQL). Other target stores - queues, files, message bus, etc - could also be implemented and abstracted with this data service layer.
+
 
 ### API Operations
 
@@ -57,7 +59,7 @@ Example: People service
 
 | Project | Description | 
 | --- | --- | ---
-| `dg.api` | Web API project - Controller providing endpoints for Person CRUD operations| 
+| `dg.api` | Web API project - PeopleController provides endpoints and methods for Person CRUD operations| 
 | `dg.common.exceptionhandling`  | Exception handling framework components |
 | `dg.common.logging`  | Logging components |
 | `dg.common.validation`  | Input (api operation contract) validation components  |
@@ -71,43 +73,185 @@ Example: People service
 | `dg.dataservice.test` | Unit testing for SQL data service using in-memory DB  provided by EF Core |  
 | `dg.validator test.test` | Unit testing for Controllers, Validators etc |  
 
+### Middleware
+
+I believe the power of .NET Core is its implementation and plugability of middleware - which is a fundamental concept for building a web server. Middleware is esentially everything that sits in between the server HTTP pipe and your application proper, executing actions in your controllers in the case of MVC. Middleware is composed of simple modular blocks that are each handed the HTTP request in turn, process it in some way, and then either return a response directly or hands off to the next block. In this way you can build easily composable blocks that provide a different part of the process. For example, one block could check for authentication credentials, another could simple log the request somewhere etc
+
+In ASP.NET Core,  middleware is defined in `Startup.cs` in the `ConfigureServices(IServiceCollection)` and `Configure(IApplicationBuilder, IHostingEnvironment, ILoggerFactory)` methods. The pattern for adding modules is throught the use of extension methods on `IServiceCollection` and `IApplicationBuilder`.  Each of the extension methods called on the `IApplicationBuilder` adds another module to the pipeline. Here is where you plugin middleware components and register services with .NET Core's dependency injection infrastructure.
+
+Eg. `Startup.cs`
+```csharp
+     // This method gets called by the runtime. Use this method to register services in the DI container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Add framework services.
+        services
+            .AddMvc(config =>
+            {
+                config.Filters.Add(typeof(ApiExceptionFilter));
+            })
+
+            //  Implicit validaton - global action filter for every request. Requires no decoration of Controller Methods
+        //      .AddActionFilterValidator<PersonValidator>()    
+
+           // ImExplicit validaton. Requires decorating Controller methods with [ValidateInput]
+            .AddValidatorsFromAssemblyContaining<PersonValidator>();  
+
+        // Register db and data service 
+        services.AddDbContext<PeopleContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+        services.AddScoped<IPeopleService>(x => new PeopleSqlService(x.GetService<PeopleContext>()));
+
+        // Register the Swagger generator, defining one or more Swagger documents
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new Info { Title = "People API", Version = "v1" });
+        });
+    }
+         
+
+    // This method gets called by the runtime. Use this method to configure middleware for the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+        loggerFactory.AddDebug();
+
+        app.UseMvc();
+
+        // Enable middleware to serve generated Swagger as a JSON endpoint.
+        app.UseSwagger();
+
+        // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "People API");
+        });
+    }
 
 
+```
 
-### Dependency Injection
 
-### Logging
+## Logging
 
-### Exception Handling
+Nlog with targets for:
+- File
+- Console
+- DB
+- Application Insights
+- Serilog (?)
 
-### Validation
-- FluentValidation
-- Extensions 
-	- Action Attribute Filter (per operation)
-	- Action Filter (global)
+## Exception Handling
+- Global exception handling 
 
-### Data Access
+## Validation
 
-### PeopleController
+Input validation uses `FluentValidation.AspNetCore` along with action filters and extensions to plug in filters into the request pipeline. `FluentValidation` is a popular open source validation library for .NET that uses fluent interface and lambda expressions for building validation rules for model objects. It also is an example of good compoenent design because it does one thing well, is extensible, and can be tested in isoldation. For more info, go to [FluentValidation](https://github.com/JeremySkinner/FluentValidation) site on gihub.
 
-## Contract
+### Plugging into Request pipeline
 
-## Data Service
+Recall in `Startup.cs` where we register filter for FluentValidation.  
+
+The package `dg.validation` adds extensions to plugin FluentValidation into request pipeline.(`IMvcBuilder`) 
+Two types of Filters are showcased and both work equally well. In each case, the registered `PersonValidator<Person>` is looked up, invoked with `Person` parameter of `PeopleController` method, its FluentValidation rules are executed on the `Person` contract, and if errors are detected, a `BadRequest(400)` with the errors are returned. If validation succeeds, execution is passed on to the controller method.
+
+Two types of validation filters
+
+1. Explicit Validation - `ValidateInputAttribute`
+- Selective validation
+- Decorate POST and PUT methods with `[ValidateInput]` attribute
+
+2. Implicit (global) validation - `ValidateInputFilter`
+- No decoration is required. This filter is an instance of IActionFilter and is hardwired into the request pipeline. It will look at method argument and try to find validator based on its type.
+
+
+### Person Contract
+
+```csharp
+    public class Person
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime BirthDate { get; set;  }
+        public DateTime ModifiedOn { get; set; }
+    }
+```
+
+### Person Validator
+
+```csharp
+    public class PersonValidator : AbstractValidator<Person>
+    {
+        public enum ErrorCode
+        {
+            FirstNameRequired = 11,
+            FirstNameInvalidLength = 12,
+            FirstNameHasInvalidChars = 13,
+
+            LastNameRequired = 21,
+            LastNameInvalidLength = 22,
+            LastNameHasInvalidChars = 23,
+
+            EmailInvalidFormat = 33,
+            EmailNotUnique = 34,
+
+            BirthDateInFuture = 41
+        }
+
+        public PersonValidator()
+        {
+            RuleFor(p => p.FirstName)
+                  .NotEmpty()
+                  .WithName("FirstName")
+                  .WithMessage("First name is required.")
+                  .WithErrorCode(ErrorCode.FirstNameRequired.ToString())
+                  .Length(0, 20)
+                  .WithMessage("First name cannot exceed 20 characters.")
+                  .WithErrorCode(ErrorCode.FirstNameInvalidLength.ToString())
+                  .Matches(@"^[A-Za-z\-\.\s]+$")
+                  .WithMessage("First name contains invalid characters.")
+                  .WithErrorCode(ErrorCode.FirstNameHasInvalidChars.ToString()); 
+
+            //  remaining  rules not shown
+        }
+    }
+
+```
+
+
+## Data Service - Data Access to SQL or Document DB
+
+###  IDataService
+
+### PeopleSqlService
+
+### PeopleDocDbService
 
 ## Repository
 
-## SQL Database 
+### SQL Database 
 
-## Azure DocumentDB
+### Azure DocumentDB
 
 ## Unit Testing
 ### Xunit
-### NSubstitute
-### FluentAssertions
+- NSubstitute
+- FluentAssertions
 
-### PersonValidator
-### PeopleService
+- EF - In-memory DB
+
+
 
 ## IntegrationTesting
-### Test Server
-### REST Sharp
+- end to end testing 
+- invoke service endpoint with HttpClient and execute right down to DB
+- requires setup and teardown strategy
+-  
+## Test Server

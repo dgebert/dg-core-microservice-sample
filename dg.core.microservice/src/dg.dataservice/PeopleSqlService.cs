@@ -22,7 +22,7 @@ namespace dg.dataservice
         public List<PersonContract> GetAll()
         {
             var people = _db.Person.Where(p => !p.IsDeleted)
-                                     .OrderBy(p => p.LastName)
+                                    .OrderBy(p => p.LastName)
                                     .Select(p => p.ToPersonContract())
                                     .ToList();
             return people;
@@ -71,7 +71,7 @@ namespace dg.dataservice
 
         private PersonEntity Find(int id)
         {
-            return _db.Person.FirstOrDefault(p => p.Id == id);
+            return _db.Person.FirstOrDefault(p => p.Id == id  && !p.IsDeleted);
         }
 
     }

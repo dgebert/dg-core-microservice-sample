@@ -13,22 +13,20 @@ namespace dg.dataservice
                 FirstName = p.FirstName,
                 LastName = p.LastName,
                 Email = p.Email,
+                PhoneNumber = p.PhoneNumber,
                 BirthDate = p.BirthDate,
+                ModifiedOn = p.ModifiedOn
             };
         }
 
         public static PersonEntity ToPersonEntity(this PersonContract p)
         {
-            return new PersonEntity
+            PersonEntity pe = new PersonEntity
             {
                 Id = p.Id,
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                Email = p.Email,
-                BirthDate = p.BirthDate,
-                ModifiedOn = System.DateTime.UtcNow,
-                IsDeleted = false
             };
+
+            return pe.UpdateFrom(p);
         }
 
         public static PersonEntity UpdateFrom(this PersonEntity target, PersonContract source)
@@ -37,8 +35,12 @@ namespace dg.dataservice
             target.LastName = source.LastName;
             target.BirthDate = source.BirthDate;
             target.Email = source.Email;
-            target.ModifiedOn = System.DateTime.UtcNow;
-       //     target.IsDeleted = source.IsDeleted;
+            target.PhoneNumber = source.PhoneNumber;
+            if(source.ModifiedOn == System.DateTime.MinValue)
+            {
+                target.ModifiedOn = System.DateTime.UtcNow;
+            }
+       //     target.IsDeleted = source.IsDeleted;   // do explicit delete in service
             return target;
         }
     }

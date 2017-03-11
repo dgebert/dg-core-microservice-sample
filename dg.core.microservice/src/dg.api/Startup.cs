@@ -10,7 +10,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using dg.common.exceptionhandling;
 using dg.dataservice;
 using dg.repository.Models;
-
+using dg.common.validation;
+using dg.validator;
 
 namespace dg.api
 {
@@ -32,16 +33,20 @@ namespace dg.api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc(
-                config =>
+            services
+                .AddMvc(config =>
                 {
                     config.Filters.Add(typeof(ApiExceptionFilter));
-                }
-            );
+                })
+          //      .AddActionFilterValidator<PersonValidator>()    //  This action filter requires no decoration of Controller Methods
+                .AddValidatorsFromAssemblyContaining<PersonValidator>();  // This requires decorating Controller methods with [ValidateInput]
 
             // Register services 
+
             services.AddDbContext<PeopleContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddScoped<IPeopleService>(x => new PeopleSqlService(x.GetService<PeopleContext>()));
+
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -61,7 +66,7 @@ namespace dg.api
             loggerFactory.AddDebug();
 
             app.UseMvc();
-
+           
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 

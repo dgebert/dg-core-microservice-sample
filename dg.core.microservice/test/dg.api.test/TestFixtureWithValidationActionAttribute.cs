@@ -18,13 +18,13 @@ using dg.validator;
 
 namespace dg.api.test
 {
-    public class TestFixture
+    public class TestFixtureWithValidationActionAttribute
     {
         public IConfigurationRoot Config { get; }
         public HttpClient Client { get; }
         private TestServer _server;
 
-        public TestFixture()
+        public TestFixtureWithValidationActionAttribute()
         {
             var webHostBuilder = new WebHostBuilder()
               .UseStartup<Startup>()
@@ -109,14 +109,5 @@ namespace dg.api.test
         }
     }
 
-    public class TextFixtureWithValidationAcyionFilter : TestFixture
-    {
-        // No need to configure Validators explicitly., This filter locates validator for contract 
-        protected override IMvcBuilder ConfigureFluentValidation<T>(IServiceCollection services)
-        {
-            var mvcBuilder = base.ConfigureFluentValidation<T>(services);
-            mvcBuilder.AddActionFilterValidator<T>();
-            return mvcBuilder;
-        }
-    }
+    
 }

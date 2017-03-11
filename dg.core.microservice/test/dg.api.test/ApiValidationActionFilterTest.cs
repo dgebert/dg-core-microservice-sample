@@ -8,11 +8,11 @@ using dg.common.validation;
 
 namespace dg.api.test
 {
-    public class ApiValidationActionFilterTest : IClassFixture<TextFixtureWithValidationAcyionFilter>
+    public class ApiValidationActionFilterTest : IClassFixture<TextFixtureWithValidationActionFilter>
     {
-        private TextFixtureWithValidationAcyionFilter _fixture;
+        private TextFixtureWithValidationActionFilter _fixture;
 
-        public ApiValidationActionFilterTest(TextFixtureWithValidationAcyionFilter fixture)
+        public ApiValidationActionFilterTest(TextFixtureWithValidationActionFilter fixture)
         {
             _fixture = fixture;
         }

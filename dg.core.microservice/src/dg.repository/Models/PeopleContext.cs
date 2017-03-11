@@ -19,15 +19,23 @@ namespace dg.repository.Models
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.FirstName)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.LastName)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.PhoneNumber)
+                  .IsRequired()
+                  .HasMaxLength(25);
+
+                entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+
+                entity.Property(e => e.ModifiedOn).HasDefaultValueSql("getdate()");
 
                 //entity.Property(e => e.RegistrationDate).HasDefaultValueSql("getdate()");
 

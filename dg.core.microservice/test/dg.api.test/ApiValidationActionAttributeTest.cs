@@ -12,12 +12,12 @@ using dg.common.validation;
 
 namespace dg.api.test
 {
-    public class ApiValidationActionAttributeTest : IClassFixture<TestFixture>
+    public class ApiValidationActionAttributeTest : IClassFixture<TestFixtureWithValidationActionAttribute>
     {
         private HttpClient _client;
-        private TestFixture _fixture;
+        private TestFixtureWithValidationActionAttribute _fixture;
 
-        public ApiValidationActionAttributeTest(TestFixture fixture)
+        public ApiValidationActionAttributeTest(TestFixtureWithValidationActionAttribute fixture)
         {
             _fixture = fixture;
             _client = fixture.Client;
