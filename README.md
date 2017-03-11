@@ -38,7 +38,7 @@ If you install Visual Studio 2017, all .NET Core components are included
 
 ## Microservice Architecture
 
-![](http://github.com/dgebert/dg-core-microservice-sample/blob/master/CoreWebApiArchitecture.PNG?raw=true "Microsservice Web API Architecture") 
+![](./CoreWebApiArchitecture.PNG?raw=true "Microsservice Web API Architecture") 
 
 ### Example: People Service 
 The sample microservice implementant is a people service which provides CRUD access to a backend People db.  A data service encapsulates the different db data access implementations. Currently there are two DB implementations: SQL Server and Document DB (no SQL). Other target stores - queues, files, message bus, etc - could also be implemented and abstracted with this data service layer.
