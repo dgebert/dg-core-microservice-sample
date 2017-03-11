@@ -13,6 +13,8 @@ namespace dg.api
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
+                .CaptureStartupErrors(true)
+                 //.UseSetting("detailedErrors", "true")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()

@@ -54,6 +54,9 @@ The sample microservice implementant is a people service which provides CRUD acc
 | PUT | /people | Update an existing  person | Person Contract | None | 201, 400, 404, 500
 | DELETE | /people/{id} | Delete a person by Id | None | None | 200, 404 ,500
 
+## Swagger generated docs
+
+![](./Swagger.PNG?raw=true "Swagger provides a way to describe API - JSON outlines the names, order, and other details of API.") 
 
 ### Projects/Assemblies
 
