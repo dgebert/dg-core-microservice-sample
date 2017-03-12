@@ -15,8 +15,10 @@ namespace dg.common.validation
 
         public static IMvcBuilder AddValidatorsFromAssemblyContaining<T>(this IMvcBuilder mvcBuilder) where T : class
         {
+            mvcBuilder.Services.AddScoped<IActionContextModelValidator, ActionContextModelValidator>();
             mvcBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<T>());
             return mvcBuilder;
         }
+
     }
 }

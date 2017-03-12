@@ -39,7 +39,7 @@ namespace dg.api
                 {
                     config.Filters.Add(typeof(ApiExceptionFilter));
                 })
-          //      .AddActionFilterValidator<PersonValidator>()    //  This action filter requires no decoration of Controller Methods
+          //      .AddActionFilterValidator<PersonValidator>(services)    //  This global action filter requires no decoration of Controller Methods
                 .AddValidatorsFromAssemblyContaining<PersonValidator>();  // This requires decorating Controller methods with [ValidateInput]
 
             // Register services 

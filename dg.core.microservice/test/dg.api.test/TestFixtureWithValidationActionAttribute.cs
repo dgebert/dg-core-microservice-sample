@@ -15,6 +15,7 @@ using dg.common.validation;
 using dg.contract;
 using dg.dataservice;
 using dg.validator;
+using FluentValidation.Results;
 
 namespace dg.api.test
 {
@@ -101,10 +102,10 @@ namespace dg.api.test
             return content;
         }
 
-        public List<ValidationError> GetValidationErrors(HttpResponseMessage response)
+        public ValidationResult GetValidationResult(HttpResponseMessage response)
         {  
             var json = response.Content.ReadAsStringAsync().Result;
-            var errorResponse = JsonConvert.DeserializeObject<List<ValidationError>>(json);
+            var errorResponse = JsonConvert.DeserializeObject<ValidationResult>(json);
             return errorResponse;
         }
     }

@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
+using FluentValidation.Results;using Xunit;
 using dg.contract;
-using dg.common.validation;
+
 
 namespace dg.api.test
 {
-    public class ApiValidationActionFilterTest : IClassFixture<TextFixtureWithValidationActionFilter>
+    public class ApiValidationActionFilterTest : IClassFixture<TestFixtureWithValidationActionFilter>
     {
-        private TextFixtureWithValidationActionFilter _fixture;
+        private TestFixtureWithValidationActionFilter _fixture;
 
-        public ApiValidationActionFilterTest(TextFixtureWithValidationActionFilter fixture)
+        public ApiValidationActionFilterTest(TestFixtureWithValidationActionFilter fixture)
         {
             _fixture = fixture;
         }
@@ -31,9 +30,8 @@ namespace dg.api.test
                 var response = await _fixture.Client.PostAsync("people3", _fixture.BuildRequestContent(p));
 
                 response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-
-                List<ValidationError> errors = _fixture.GetValidationErrors(response);
-                errors.Should().NotBeEmpty();
+                ValidationResult result = _fixture.GetValidationResult(response);
+                result.IsValid.Should().BeFalse();
             }
             catch (Exception ex)
             {

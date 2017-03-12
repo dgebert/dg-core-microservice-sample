@@ -9,6 +9,7 @@ using Xunit;
 
 using dg.contract;
 using dg.common.validation;
+using FluentValidation.Results;
 
 namespace dg.api.test
 {
@@ -41,8 +42,8 @@ namespace dg.api.test
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-                List<ValidationError>  errors = _fixture.GetValidationErrors(response);
-                errors.Should().NotBeEmpty();
+                ValidationResult result = _fixture.GetValidationResult(response);
+                result.IsValid.Should().BeFalse();
             }
             catch (Exception ex)
             {
@@ -66,9 +67,8 @@ namespace dg.api.test
                 var response = await _client.PostAsync("people2", _fixture.BuildRequestContent(p));
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-                List<ValidationError> errors = _fixture.GetValidationErrors(response);
-                errors.Should().NotBeEmpty();
+                ValidationResult result = _fixture.GetValidationResult(response);
+                result.IsValid.Should().BeFalse();
             }
             catch (Exception ex)
             {
