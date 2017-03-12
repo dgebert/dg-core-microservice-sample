@@ -37,10 +37,11 @@ namespace dg.common.validation.unittest
 
             // Assert
             actionExecutingContext.Result.Should().BeNull();
+            filter.Result.IsValid.Should().BeTrue();
         }
 
         [Fact]
-        public void NoMatchingValidatorForModel()
+        public void GivenNoModelInActionContext_WhenOnActionExecuting_ShouldNotValidate()
         {
             int argValue = 99;
 
@@ -65,10 +66,11 @@ namespace dg.common.validation.unittest
 
             // Assert
             actionExecutingContext.Result.Should().BeNull();
+            filter.Result.IsValid.Should().BeTrue();
         }
 
         [Fact]
-        public void ValidatorNotFound()
+        public void GivenValidatorNotFound_WhenOnActionExecuting_ShouldNotValidate()
         {
             // Mock the all the pieces for ActionExecutingContext 
              var p = new Person();
@@ -88,6 +90,40 @@ namespace dg.common.validation.unittest
 
             // Assert
             actionExecutingContext.Result.Should().BeNull();
+            filter.Result.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenValidatorFound_AndValidationSucceeds_WhenOnActionExecuting_ShouldReturnValidationResultIsValid()
+        {
+            var p = new Person();
+            // Create the validator mock with success result
+            var validationResult = new ValidationResult();
+            var mockValidator = new MockPersonValidator(validationResult);
+
+            // If provider.GetService(typeof(IValidator<User>)) gets called, IValidator<Person> mock will be returned
+            var mockServiceProvider = Substitute.For<IServiceProvider>();
+            mockServiceProvider.GetService(typeof(IValidator<Person>)).Returns(mockValidator);
+            mockServiceProvider.GetService(typeof(ActionContextModelValidator)).Returns(new ActionContextModelValidator());
+
+            // Mock the HttpContext 
+            var mockHttpContext = Substitute.For<HttpContext>();
+            mockHttpContext.RequestServices.Returns(mockServiceProvider);
+
+            var actionArgs = new Dictionary<string, object>();
+            actionArgs["person"] = p;
+            var actionExecutingContext = HttpContextUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
+            var actionContextModelValidator = new ActionContextModelValidator();
+
+
+            // Act
+            var filter = new ValidateInputAttributeImpl(new ActionContextModelValidator());
+            filter.OnActionExecuting(actionExecutingContext);
+
+            // Assert
+            var actionResult = actionExecutingContext.Result;
+            actionResult.Should().BeNull();
+            filter.Result.IsValid.Should().BeTrue();
         }
 
         [Fact]
@@ -127,6 +163,7 @@ namespace dg.common.validation.unittest
             badRequestResult.StatusCode.Value.Should().Be(StatusCodes.Status400BadRequest);
             var result = badRequestResult.Value as ValidationResult;
             result.ShouldBeEquivalentTo(validationResult);
+            filter.Result.ShouldBeEquivalentTo(validationResult);
         }
 
 

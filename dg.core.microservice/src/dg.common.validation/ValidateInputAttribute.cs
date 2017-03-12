@@ -1,4 +1,5 @@
 ﻿
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -14,10 +15,11 @@ namespace dg.common.validation
     public class ValidateInputAttributeImpl : ActionFilterAttribute
     {
         private IActionContextModelValidator _actionContextModelValidator;
+        public ValidationResult Result { get; set; } = null;
 
         public ValidateInputAttributeImpl(IActionContextModelValidator actionContextModelValidator = null)
         {
-            _actionContextModelValidator = actionContextModelValidator ?? new ActionContextModelValidator();  // TODO: new is GLUE :(
+            _actionContextModelValidator = actionContextModelValidator;
         }
         
         /// <summary>
@@ -26,11 +28,10 @@ namespace dg.common.validation
         /// <param name="actionContext"></param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-
-            var validationResult = _actionContextModelValidator.TryValidateModel(context);
-            if (!validationResult.IsValid)
+            Result = _actionContextModelValidator.TryValidateModel(context);
+            if (!Result.IsValid)
             {
-                context.Result = new BadRequestObjectResult(validationResult);
+                context.Result = new BadRequestObjectResult(Result);
             }
         }
     }
