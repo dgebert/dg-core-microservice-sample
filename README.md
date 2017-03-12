@@ -232,6 +232,19 @@ Two types of validation filters
 ## Data Service - Data Access to SQL or Document DB
 
 ###  IDataService
+This interface provides the gateway into backend data stores.  The responsibility of a dataservice implementation is to provide transformation between contract and data store entities. Although contract and entities are almost identical, they both serve different purposes and help isolate and encapsulate each component layer. Also, contracts often are consolidations of more than one entity, so changing a contract to accommodate this data requirement does not affect the data access tier or have ripple effects throughout the service.
+
+``` csharp
+public interface IDataService
+{
+     List<Person> GetAll();
+     Person Get(int id);
+     Person Create(Person person);
+     Person Update(Person person);
+     bool Delete(int id);
+}
+```
+`
 
 ### PeopleSqlService
 
