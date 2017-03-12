@@ -172,11 +172,53 @@ namespace dg.dataservice.test
                 service.Create(p);
 
                 p.LastName = p.LastName + " Updated";
-
-                service.Update(p);
+                var updateResult = service.Update(p);
+                updateResult.Should().NotBeNull();
 
                 var personInDb = service.Get(p.Id);
                 personInDb.ShouldBeEquivalentTo(p);
+            }
+        }
+
+        [Fact]
+        public void GivenPersonDoesNotExist_WhenUpdate_ShouldReturnNull_WithNoUpdate()
+        {
+            using (var db = new PeopleContext(_options))
+            {
+                var service = new PeopleSqlService(db);
+                var p = CreatePerson().ToPersonContract();
+                var id = p.Id;
+                service.Create(p);
+
+                // Id should be readonly in reality, but this is to simulate a bad update
+                var personInDb = service.Get(p.Id);
+                personInDb.Id = 999;
+                personInDb.LastName = p.LastName + " Updated"; 
+                var updateResult = service.Update(personInDb);
+
+                updateResult.Should().BeNull();
+
+                var originalPerson = service.Get(id);
+                originalPerson.ShouldBeEquivalentTo(p);
+            }
+        }
+
+        [Fact]
+        public void GivenPersonExists_WhenDelete_ShouldBeDeleted_AndNotFound()
+        {
+            using (var db = new PeopleContext(_options))
+            {
+                var service = new PeopleSqlService(db);
+                var p = CreatePerson().ToPersonContract();
+                service.Create(p);
+
+                var result = service.Delete(p.Id);
+
+                result.Should().BeTrue();
+                var originalPerson = service.Get(p.Id);
+                originalPerson.Should().BeNull();
+                var deletedPerson = service.GetIgnoreDelete(p.Id);
+                deletedPerson.ShouldBeEquivalentTo(p);
             }
         }
 

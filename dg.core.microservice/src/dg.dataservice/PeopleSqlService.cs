@@ -28,9 +28,17 @@ namespace dg.dataservice
             return people;
         }
 
+
         public PersonContract Get(int id)
         {
             var personEntity = Find(id);
+            return personEntity == null ? null : personEntity.ToPersonContract();
+        }
+
+        // not on interface, used for testing (soft) Delete
+        public PersonContract GetIgnoreDelete(int id)
+        {
+            var personEntity = Find(id, respectDelete : false);
             return personEntity == null ? null : personEntity.ToPersonContract();
         }
 
@@ -69,9 +77,12 @@ namespace dg.dataservice
             return true;
         }
 
-        private PersonEntity Find(int id)
+
+        private PersonEntity Find(int id, bool respectDelete = true)
         {
-            return _db.Person.FirstOrDefault(p => p.Id == id  && !p.IsDeleted);
+            return respectDelete ?
+                 _db.Person.FirstOrDefault(p => p.Id == id && !p.IsDeleted) :
+                  _db.Person.FirstOrDefault(p => p.Id == id);
         }
 
     }
