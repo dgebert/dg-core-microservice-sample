@@ -146,7 +146,41 @@ namespace dg.dataservice.test
             }
         }
 
-        private Person CreatePerson(int i, bool isDeleted = false)
+
+        [Fact]
+        public void GivenPersonDoesNotExist_WhenCreatePerson_ShouldAddPersonToDb()
+        {
+            using (var db = new PeopleContext(_options))
+            {
+                var service = new PeopleSqlService(db);
+                var p = CreatePerson().ToPersonContract();
+                service.Create(p);
+
+                var personInDb = service.Get(p.Id);
+                personInDb.ShouldBeEquivalentTo(p);
+            }
+        }
+
+
+        [Fact]
+        public void GivenPersonExists_WhenUpdate_ShouldUpdate()
+        {
+            using (var db = new PeopleContext(_options))
+            {
+                var service = new PeopleSqlService(db);
+                var p = CreatePerson().ToPersonContract();
+                service.Create(p);
+
+                p.LastName = p.LastName + " Updated";
+
+                service.Update(p);
+
+                var personInDb = service.Get(p.Id);
+                personInDb.ShouldBeEquivalentTo(p);
+            }
+        }
+
+        private Person CreatePerson(int i = 1, bool isDeleted = false)
         {
             var p = new Person
             {
@@ -156,6 +190,7 @@ namespace dg.dataservice.test
                 Email = string.Format("somebody_{0}@gmail.com", i),
                 BirthDate = new System.DateTime(1970 + i, i, i),
                 PhoneNumber = string.Format("2{0}4-5{0}2{0}-4{0}5{0}", i),
+                ModifiedOn = System.DateTime.UtcNow,
                 IsDeleted = isDeleted
             };
             return p;

@@ -36,11 +36,7 @@ namespace dg.dataservice
             target.BirthDate = source.BirthDate;
             target.Email = source.Email;
             target.PhoneNumber = source.PhoneNumber;
-            if(source.ModifiedOn == System.DateTime.MinValue)
-            {
-                target.ModifiedOn = System.DateTime.UtcNow;
-            }
-       //     target.IsDeleted = source.IsDeleted;   // do explicit delete in service
+            target.ModifiedOn = source.ModifiedOn == System.DateTime.MinValue ? System.DateTime.UtcNow : source.ModifiedOn;
             return target;
         }
     }
