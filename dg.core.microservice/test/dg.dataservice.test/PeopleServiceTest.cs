@@ -222,6 +222,23 @@ namespace dg.dataservice.test
             }
         }
 
+        [Fact]
+        public void GivenPersonDoesNotExist_WhenDelete_ShouldReturnFalse_AndNoDelet()
+        {
+            using (var db = new PeopleContext(_options))
+            {
+                var service = new PeopleSqlService(db);
+                var p = CreatePerson().ToPersonContract();
+                service.Create(p);
+
+                var result = service.Delete(9999);
+
+                result.Should().BeFalse();
+                var originalPerson = service.Get(p.Id);
+                originalPerson.ShouldBeEquivalentTo(p);
+            }
+        }
+
         private Person CreatePerson(int i = 1, bool isDeleted = false)
         {
             var p = new Person
