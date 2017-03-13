@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace dg.api.integrationtest
 {
-    public class Class1
+    public class PeopleApiTest
     {
-        public Class1()
-        {
-        }
+       
     }
 }

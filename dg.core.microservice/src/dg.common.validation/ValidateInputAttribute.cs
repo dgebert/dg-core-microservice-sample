@@ -12,7 +12,7 @@ namespace dg.common.validation
         }
     }
 
-    public class ValidateInputAttributeImpl : ActionFilterAttribute
+    public class ValidateInputAttributeImpl : ActionFilterAttribute, IValidationResult
     {
         private IActionContextModelValidator _actionContextModelValidator;
         public ValidationResult Result { get; set; } = null;
