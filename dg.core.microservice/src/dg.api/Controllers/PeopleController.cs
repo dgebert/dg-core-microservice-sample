@@ -8,7 +8,7 @@ using dg.dataservice;
 using dg.validator;
 using dg.common.logging;
 
-namespace Absg.Common.Validation.DemoApi.Controllers
+namespace dg.api.controllers
 {
 
     public class PeopleController : Controller

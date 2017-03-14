@@ -17,15 +17,15 @@ using dg.dataservice;
 using dg.validator;
 using FluentValidation.Results;
 
-namespace dg.api.test
+namespace dg.unittest
 {
-    public class TestFixtureWithValidationActionAttribute
+    public class WebHostTestFixture
     {
         public IConfigurationRoot Config { get; }
         public HttpClient Client { get; }
         private TestServer _server;
 
-        public TestFixtureWithValidationActionAttribute()
+        public WebHostTestFixture()
         {
             var webHostBuilder = new WebHostBuilder()
               .UseStartup<Startup>()
@@ -46,9 +46,14 @@ namespace dg.api.test
             Client.BaseAddress = new Uri(@"http://localhost:5000/");
         }
 
+        public virtual IWebHostBuilder ConfigureServices(IWebHostBuilder webHostBuilder)
+        {
+            webHostBuilder.Configure(app => app.UseMvc());
+            return webHostBuilder;
+        }
 
 
-        protected virtual IMvcBuilder ConfigureFluentValidation<T>(IServiceCollection services) where T: class
+        protected virtual IMvcBuilder ConfigureFluentValidation<T>(IServiceCollection services) where T : class
         {
             var mvcBuilder = services.AddMvc();
             mvcBuilder.AddValidatorsFromAssemblyContaining<T>();
@@ -66,7 +71,6 @@ namespace dg.api.test
                 _server.Dispose();
             }
         }
-
 
         class Startup
         {
@@ -105,12 +109,13 @@ namespace dg.api.test
         }
 
         public ValidationResult GetValidationResult(HttpResponseMessage response)
-        {  
+        {
             var json = response.Content.ReadAsStringAsync().Result;
             var errorResponse = JsonConvert.DeserializeObject<ValidationResult>(json);
             return errorResponse;
         }
     }
 
-    
+
 }
+
