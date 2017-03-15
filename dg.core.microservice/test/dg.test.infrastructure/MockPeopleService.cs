@@ -1,11 +1,11 @@
-﻿using dg.dataservice;
+﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using dg.contract;
 
-namespace dg.unittest
+using dg.contract;
+using dg.dataservice;
+
+namespace dg.test.infrastructure
 {
     public class MockPeopleService : IPeopleService
     {

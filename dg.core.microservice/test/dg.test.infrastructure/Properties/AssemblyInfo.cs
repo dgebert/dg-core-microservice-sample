@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("dg.api.test")]
+[assembly: AssemblyProduct("dg.test.infrastructure")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0f5b9bc0-b362-4735-9981-12afa1be50de")]
+[assembly: Guid("988aa51c-6b5b-4b2a-a4a5-0a364e4c98bb")]

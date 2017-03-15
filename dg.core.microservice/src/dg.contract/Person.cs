@@ -12,6 +12,6 @@ namespace dg.contract
         public string PhoneNumber { get; set; }
         public DateTime BirthDate { get; set;  }
         public DateTime ModifiedOn { get; set; }
-
+        public string ModifiedBy { get; set; }
     }
 }

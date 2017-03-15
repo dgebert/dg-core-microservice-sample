@@ -8,19 +8,18 @@ using FluentAssertions;
 using Xunit;
 
 using dg.contract;
-using dg.common.validation;
 using FluentValidation.Results;
 
-namespace dg.api.test
+namespace dg.unittest.api
 {
-    public class ApiValidationActionAttributeTest : IClassFixture<TestFixtureWithValidationActionAttribute>
+    public class ApiValidateInputAttributeTest : IClassFixture<TestServerFixtureVIA>
     {
-        private HttpClient _client;
-        private TestFixtureWithValidationActionAttribute _fixture;
+        private readonly HttpClient _client;
+        private readonly TestServerFixtureVIA _fixture;
 
 
         // TODO:  these tests are for validation filters.  Should configure DB in Test fixture to use in-memory db
-        public ApiValidationActionAttributeTest(TestFixtureWithValidationActionAttribute fixture)
+        public ApiValidateInputAttributeTest(TestServerFixtureVIA fixture)
         {
             _fixture = fixture;
             _client = fixture.Client;
@@ -28,7 +27,7 @@ namespace dg.api.test
 
 
         [Fact]
-        public async Task GivenApiWithExplicitValidation_WhenInvokedWithInvalidContract_ShouldReturnBadRequest_WithErrors()
+        public async Task GivenApiWithExplicitValidator_WhenInvokedWithInvalidContract_ShouldReturnBadRequest_WithErrors()
         {
             try
             {
@@ -38,7 +37,7 @@ namespace dg.api.test
                     LastName = "Willis"
                 };
 
-                var response = await _client.PostAsync("people", _fixture.BuildRequestContent(p));
+                var response = await _client.PostAsync("people2", _fixture.BuildRequestContent(p));
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -64,7 +63,7 @@ namespace dg.api.test
                     LastName = "Willis"
                 };
 
-                var response = await _client.PostAsync("people2", _fixture.BuildRequestContent(p));
+                var response = await _client.PostAsync("people", _fixture.BuildRequestContent(p));
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 ValidationResult result = _fixture.GetValidationResult(response);

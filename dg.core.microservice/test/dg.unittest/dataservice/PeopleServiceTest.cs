@@ -49,7 +49,7 @@ namespace dg.unitest.dataservice
             int id = 1;
             using (var db = new PeopleContext(_options))
             {
-                p = CreatePerson(id);
+                p = BuildPerson(id);
                 db.Person.Add(p);
                 db.SaveChanges();
             }
@@ -72,7 +72,7 @@ namespace dg.unitest.dataservice
             using (var db = new PeopleContext(_options))
             {
                 bool isDeleted = true;
-                p = CreatePerson(id, isDeleted);
+                p = BuildPerson(id, isDeleted);
                 db.Person.Add(p);
                 db.SaveChanges();
             }
@@ -107,7 +107,7 @@ namespace dg.unitest.dataservice
             {
                 for (var i =1; i <= total; i++)
                 {
-                    var p = CreatePerson(i);
+                    var p = BuildPerson(i);
                     db.Person.Add(p);
                 }
                 db.SaveChanges();
@@ -133,7 +133,7 @@ namespace dg.unitest.dataservice
                 for (var i = 1; i <= total; i++)
                 {
                     var isDeleted = i > deleteAfterId;
-                    var p = CreatePerson(i, isDeleted);
+                    var p = BuildPerson(i, isDeleted);
                     db.Person.Add(p);
                 }
                 db.SaveChanges();
@@ -156,7 +156,7 @@ namespace dg.unitest.dataservice
             using (var db = new PeopleContext(_options))
             {
                 var service = new PeopleSqlService(db);
-                var p = CreatePerson().ToPersonContract();
+                var p = BuildPerson().ToPersonContract();
                 service.Create(p);
 
                 var personInDb = service.Get(p.Id);
@@ -171,7 +171,7 @@ namespace dg.unitest.dataservice
             using (var db = new PeopleContext(_options))
             {
                 var service = new PeopleSqlService(db);
-                var p = CreatePerson().ToPersonContract();
+                var p = BuildPerson().ToPersonContract();
                 service.Create(p);
 
                 p.LastName = p.LastName + " Updated";
@@ -189,7 +189,7 @@ namespace dg.unitest.dataservice
             using (var db = new PeopleContext(_options))
             {
                 var service = new PeopleSqlService(db);
-                var p = CreatePerson().ToPersonContract();
+                var p = BuildPerson().ToPersonContract();
                 var id = p.Id;
                 service.Create(p);
 
@@ -212,7 +212,7 @@ namespace dg.unitest.dataservice
             using (var db = new PeopleContext(_options))
             {
                 var service = new PeopleSqlService(db);
-                var p = CreatePerson().ToPersonContract();
+                var p = BuildPerson().ToPersonContract();
                 service.Create(p);
 
                 var result = service.Delete(p.Id);
@@ -231,7 +231,7 @@ namespace dg.unitest.dataservice
             using (var db = new PeopleContext(_options))
             {
                 var service = new PeopleSqlService(db);
-                var p = CreatePerson().ToPersonContract();
+                var p = BuildPerson().ToPersonContract();
                 service.Create(p);
 
                 var result = service.Delete(9999);
@@ -242,7 +242,7 @@ namespace dg.unitest.dataservice
             }
         }
 
-        private Person CreatePerson(int i = 1, bool isDeleted = false)
+        private Person BuildPerson(int i = 1, bool isDeleted = false)
         {
             var p = new Person
             {

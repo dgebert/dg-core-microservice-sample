@@ -37,6 +37,10 @@ namespace dg.repository.Models
 
                 entity.Property(e => e.ModifiedOn).HasDefaultValueSql("getdate()");
 
+                entity.Property(e => e.ModifiedBy)
+                 .IsRequired()
+                 .HasMaxLength(100);
+
                 //entity.Property(e => e.RegistrationDate).HasDefaultValueSql("getdate()");
 
                 //entity.Property(e => e.Title)

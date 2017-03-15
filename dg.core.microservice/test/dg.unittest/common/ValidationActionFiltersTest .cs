@@ -6,33 +6,41 @@ using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using FluentAssertions;
 using FluentValidation;
-using FluentValidation.Results;
 using NSubstitute;
 
+using dg.common.validation;
 using dg.contract;
 using dg.validator;
-using Microsoft.AspNetCore.Mvc.Filters;
+using FluentValidation.Results;
 
-namespace dg.common.validation.unittest
+namespace dg.unittest.common
 {
-    public class ValidationInputAttributeTest
+    public class ValidationActionFiltersTest
     {
-        public ValidationInputAttributeTest()
+        
+        // Each test can be applied to both filters
+        public static IEnumerable<object> ValidationFilters
         {
+            get
+            {
+                return new object[]
+                {
+                     new object[] { new ValidateInputAttributeImpl(new ActionContextModelValidator()) },
+                     new object[] { new ValidateInputFilterImpl(new ActionContextModelValidator()) }
+               };
+            }
         }
-
-      
-        [Fact]
-        public void NoActionArgs()
-        {  
+           
+        [Theory, MemberData("ValidationFilters")]
+        public void GivenNoActionArgumentsInActionContext_WhenOnActionExecuting_ShouldNotValidate(IValidationResult filter)
+        {
             // Mock the HttpContext 
             var mockHttpContext = Substitute.For<HttpContext>();
             var actionArgs = new Dictionary<string, object>();
-            var actionExecutingContext = HttpContextUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
+            var actionExecutingContext = HttpUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
             var actionContextModelValidator = new ActionContextModelValidator();
 
             // Act
-            var filter = new ValidateInputAttributeImpl(new ActionContextModelValidator());
             filter.OnActionExecuting(actionExecutingContext);
 
             // Assert
@@ -40,8 +48,8 @@ namespace dg.common.validation.unittest
             filter.Result.IsValid.Should().BeTrue();
         }
 
-        [Fact]
-        public void GivenNoModelInActionContext_WhenOnActionExecuting_ShouldNotValidate()
+         [Theory, MemberData("ValidationFilters")]
+        public void GivenNoModelInActionContext_WhenOnActionExecuting_ShouldNotValidate(IValidationResult filter)
         {
             int argValue = 99;
 
@@ -58,10 +66,9 @@ namespace dg.common.validation.unittest
             actionArgs["notPerson"] = argValue;  // Validator should not be resolved
 
             var mockController = Substitute.For<Controller>();
-            var actionExecutingContext = HttpContextUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
+            var actionExecutingContext = HttpUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
 
             // Act
-            var filter = new ValidateInputAttributeImpl(new ActionContextModelValidator());
             filter.OnActionExecuting(actionExecutingContext);
 
             // Assert
@@ -69,8 +76,8 @@ namespace dg.common.validation.unittest
             filter.Result.IsValid.Should().BeTrue();
         }
 
-        [Fact]
-        public void GivenValidatorNotFound_WhenOnActionExecuting_ShouldNotValidate()
+         [Theory, MemberData("ValidationFilters")]
+        public void GivenValidatorNotFound_WhenOnActionExecuting_ShouldNotValidate(IValidationResult filter)
         {
             // Mock the all the pieces for ActionExecutingContext 
              var p = new Person();
@@ -82,10 +89,9 @@ namespace dg.common.validation.unittest
 
             var actionArgs = new Dictionary<string, object>();
             actionArgs["person"] = p;
-            var actionExecutingContext = HttpContextUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
+            var actionExecutingContext = HttpUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
 
             // Act
-            var filter = new ValidateInputAttributeImpl(new ActionContextModelValidator());
             filter.OnActionExecuting(actionExecutingContext);
 
             // Assert
@@ -93,8 +99,8 @@ namespace dg.common.validation.unittest
             filter.Result.IsValid.Should().BeTrue();
         }
 
-        [Fact]
-        public void GivenValidatorFound_AndValidationSucceeds_WhenOnActionExecuting_ShouldReturnValidationResultIsValid()
+         [Theory, MemberData("ValidationFilters")]
+        public void GivenValidatorFound_AndValidationSucceeds_WhenOnActionExecuting_ShouldReturnValidationResultIsValid(IValidationResult filter)
         {
             var p = new Person();
             // Create the validator mock with success result
@@ -112,12 +118,11 @@ namespace dg.common.validation.unittest
 
             var actionArgs = new Dictionary<string, object>();
             actionArgs["person"] = p;
-            var actionExecutingContext = HttpContextUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
+            var actionExecutingContext = HttpUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
             var actionContextModelValidator = new ActionContextModelValidator();
 
 
             // Act
-            var filter = new ValidateInputAttributeImpl(new ActionContextModelValidator());
             filter.OnActionExecuting(actionExecutingContext);
 
             // Assert
@@ -126,8 +131,8 @@ namespace dg.common.validation.unittest
             filter.Result.IsValid.Should().BeTrue();
         }
 
-        [Fact]
-        public void GivenValidatorFound_AndValidationFailure_WhenOnActionExecuting_ShouldHaveBadRequestResponse_WithFailure()
+         [Theory, MemberData("ValidationFilters")]
+        public void GivenValidatorFound_AndValidationFailure_WhenOnActionExecuting_ShouldHaveBadRequestResponse_WithFailure(IValidationResult filter)
         {
             var p = new Person();
             // Create the validator mock with error results
@@ -148,12 +153,11 @@ namespace dg.common.validation.unittest
 
             var actionArgs = new Dictionary<string, object>();
             actionArgs["person"] = p;
-            var actionExecutingContext = HttpContextUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
+            var actionExecutingContext = HttpUtils.MockedActionExecutingContext(mockHttpContext, actionArgs);
             var actionContextModelValidator = new ActionContextModelValidator();
 
 
             // Act
-            var filter = new ValidateInputAttributeImpl(new ActionContextModelValidator());
             filter.OnActionExecuting(actionExecutingContext);
 
             // Assert

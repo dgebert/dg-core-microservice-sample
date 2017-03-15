@@ -13,6 +13,6 @@ namespace dg.repository.Models
         public DateTime BirthDate { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime ModifiedOn { get; set; }
-      
+        public string ModifiedBy { get; set; }
     }
 }

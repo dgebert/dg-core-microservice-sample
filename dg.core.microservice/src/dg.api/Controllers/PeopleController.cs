@@ -14,7 +14,7 @@ namespace dg.api.controllers
     public class PeopleController : Controller
     {
         private IPeopleService _peopleService;
-        private ILogger _logger;
+  //      private ILogger _logger;
   
         
               public PeopleController(IPeopleService service)
@@ -71,7 +71,7 @@ namespace dg.api.controllers
             var validationResult = new PersonValidator().Validate(person);
             if (!validationResult.IsValid)
             {
-                return new BadRequestObjectResult(validationResult.Errors);
+                return new BadRequestObjectResult(validationResult);
             }
 
             return await AddPersonImpl(person);
