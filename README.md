@@ -9,13 +9,13 @@ This is a sample demonstration of a simple microservice developed with MIcrosoft
 
 There is a vast amount of technology resources online. The following is a short list of prerequisites with links to recommended documentation for getting started:
 
+- [Choosing .NET Core](https://docs.microsoft.com/en-us/dotnet/articles/standard/choosing-core-framework-server)
 - [.NET Core](https://msdn.microsoft.com/en-us/library/dn878908(v=vs.110).aspx)
 - [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/ "ASP.NET Core is a new open-source and cross-platform framework for building modern cloud based internet connected applications, such as web apps, IoT apps and mobile backends")
 - [.NET Core on github](https://dotnet.github.io/)
 - [EF Core](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro "Core Entity Framework")
 - [Swagger](http://swagger.io/)
 - [Open API](https://github.com/OAI/OpenAPI-Specification)
-- [REST Fundamentals](https://code.tutsplus.com/tutorials/a-beginners-guide-to-http-and-rest--net-16340)
 - [Microservices](https://martinfowler.com/articles/microservices.html "Microservices overview by Martin Fowler")
 
 ## Getting Started
@@ -62,19 +62,21 @@ The sample microservice implementant is a people service which provides CRUD acc
 
 | Project | Description | 
 | --- | --- | ---
+| src | |
 | `dg.api` | Web API project - PeopleController provides endpoints and methods for Person CRUD operations| 
 | `dg.common.exceptionhandling`  | Exception handling framework components |
 | `dg.common.logging`  | Logging components |
-| `dg.common.validation`  | Input (api operation contract) validation components  |
+| `dg.common.validation`  | Api contract validation - FluentValidation extensions and action filters to execute validation  |
 | `dg.contract` | Contracts for web api operations   |       
 | `dg.dataservice` | Data access with EF Core    |       
 | `dg.document.db` | Data access with Document DB sdk  |       
-| `dg.repository` | EF DB context with POCO models - generated from SQL database   |                                     
+| `dg.repository` | EF DB context with POCO models - generated from SQL database   |                                 
 | `dg.sqldatabase` | SQL database containing People DB schema and seed scripts|  
 | `dg.validator` | FluentValidation validator for Person contract |  
-| `dg.api.test` | Integration testing for PersonController, using ASP.NET Core in-memory TestHost to host Web API |  
-| `dg.dataservice.test` | Unit testing for SQL data service using in-memory DB  provided by EF Core |  
-| `dg.validator test.test` | Unit testing for Controllers, Validators etc |  
+| test | |
+| `dg.api.integrationtest` | end-to-end Integration testing for PersonController, using TestServer to host Web API | 
+| `dg.unittest` | Unit testing for api controller, common, dataservice, validator |  
+| `dg.test.infrastructur` | coommon components for testing - Test Fixture, Http utilities, Mocks, etc |  
 
 ### Middleware
 
