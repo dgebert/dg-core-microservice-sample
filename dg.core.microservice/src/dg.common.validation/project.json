@@ -3,7 +3,7 @@
 
   "dependencies": {
     "NETStandard.Library": "1.6.1",
-    "Microsoft.AspNetCore.Mvc.Core": "1.1.1",
+    "Microsoft.AspNetCore.Mvc.Core": "1.1.0",
 
     "FluentValidation": "6.4.0",
     "FluentValidation.AspNetCore": "6.4.0-rc4",
