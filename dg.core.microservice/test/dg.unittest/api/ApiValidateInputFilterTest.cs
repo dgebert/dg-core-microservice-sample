@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentValidation.Results;using Xunit;
+using FluentValidation.Results;
+using Xunit;
 using dg.contract;
-
+using dg.validator;
+using System.Net;
+using Microsoft.Extensions.DependencyInjection;
+using dg.common.validation;
 
 namespace dg.unittest.api
 {
-    public class ApiValidateInputFilterTest : IClassFixture<TestServerFixtureforValidateInputFilter>
+    public class ApiValidateInputFilterTest : IClassFixture<TestServerfixtureForValdateInputFilter>
     {
-        private TestServerFixtureforValidateInputFilter _fixture;
+        private TestServerfixtureForValdateInputFilter _fixture;
 
-        public ApiValidateInputFilterTest(TestServerFixtureforValidateInputFilter fixture)
+        public ApiValidateInputFilterTest(TestServerfixtureForValdateInputFilter fixture)
         {
             _fixture = fixture;
+            _fixture.ConfigureMvcForValidateInputFilter<PersonValidator>();
         }
 
-        [Fact(Skip="Need to refactor TestServerFixture to register ValidateInputFilter")]
-        public async Task ValidationFilter_Test()
+        [Fact]
+        public async Task WhenInvokedWithInvalidContract_ShouldReturnBadRequest_WithErrors()
         {
             try
             {
@@ -27,9 +32,9 @@ namespace dg.unittest.api
                     LastName = "Willis"
                 };
 
-                var response = await _fixture.Client.PostAsync("people3", _fixture.BuildRequestContent(p));
+                var response = await _fixture.Client.PostAsync("people2", _fixture.BuildRequestContent(p));
 
-                response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 ValidationResult result = _fixture.GetValidationResult(response);
                 result.IsValid.Should().BeFalse();
             }
@@ -40,6 +45,16 @@ namespace dg.unittest.api
             }
         }
 
+
     }
+
+    public class TestServerfixtureForValdateInputFilter : TestServerFixture
+    {
+        public override void ConfigureValidation(IServiceCollection services)
+        {
+            services.AddValidateInputFilter<PersonValidator>();
+        }
+    }
+
 
 }

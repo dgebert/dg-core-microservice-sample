@@ -63,8 +63,16 @@ namespace dg.api.controllers
             return await AddPersonImpl(person);
         }
 
-        // Validation solution 2 - explict call to validator
+        // Validation solution 2 - validation via registered IActionFilter (ValidateInputFilter) in Startup.ConfigureServices()
         [HttpPost("people2")]
+        public async Task<IActionResult> AddPerson2([FromBody] Person person)
+        {
+            return await AddPersonImpl(person);
+        }
+
+
+        // Validation solution 3 - explict call to validator
+        [HttpPost("people3")]
         public async Task<IActionResult> AddPerson1([FromBody] Person person)
         {
 
@@ -74,14 +82,6 @@ namespace dg.api.controllers
                 return new BadRequestObjectResult(validationResult);
             }
 
-            return await AddPersonImpl(person);
-        }
-
-
-        // Validation solution 3 - validation via registered IActionFilter (ValidateInputFilter) in Startup.ConfigureServices()
-        [HttpPost("people3")]
-        public async Task<IActionResult> AddPerson2([FromBody] Person person)
-        {
             return await AddPersonImpl(person);
         }
 

@@ -17,7 +17,7 @@ namespace dg.common.validation
         private IActionContextModelValidator _actionContextModelValidator;
         public ValidationResult Result { get; set; } = null;
 
-        public ValidateInputAttributeImpl(IActionContextModelValidator actionContextModelValidator = null)
+        public ValidateInputAttributeImpl(IActionContextModelValidator actionContextModelValidator)
         {
             _actionContextModelValidator = actionContextModelValidator;
         }

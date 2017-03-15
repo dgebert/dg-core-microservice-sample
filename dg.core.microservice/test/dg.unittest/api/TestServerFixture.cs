@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using dg.common.validation;
-using dg.contract;
-using dg.dataservice;
-using dg.validator;
+
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,16 +11,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
+using dg.common.validation;
+using dg.contract;
+using dg.dataservice;
+using dg.validator;
+
 namespace dg.unittest.api
 {
-    public class TestServerFixtureVIA
+    public class TestServerFixture
     {
         public IConfigurationRoot Config { get; }
         public HttpClient Client { get; }
-        private TestServer _server;
-        private IConfigurationRoot Configuration { get; }
+        public TestServer _server { get; }
+        public IConfigurationRoot Configuration { get; }
+        public IServiceCollection Services { get; private set; }
 
-        public TestServerFixtureVIA()
+        public TestServerFixture()
         {
             var builder = new ConfigurationBuilder()
                   .SetBasePath(Directory.GetCurrentDirectory())
@@ -34,6 +37,7 @@ namespace dg.unittest.api
             var webHostBuilder = new WebHostBuilder()
                     .UseEnvironment("Testing")
                     .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseConfiguration(Configuration)
                     .UseKestrel()
                    // Configure
                     .Configure(ConfigureApp)
@@ -42,35 +46,63 @@ namespace dg.unittest.api
             _server = new TestServer(webHostBuilder);
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri(@"http://localhost:5000/");
+
         }
 
         public virtual void ConfigureApp(IApplicationBuilder app)
         {
+            
             app.UseMvc();
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-        //    services.AddSingleton(x => Configuration);
+            Services = services;
             services.AddMvc();
+
+            ConfigureValidation(services);
             services.AddScoped<IPeopleService>(x => new PeopleSqlService(null));
-
-            ConfigureMvcForValidateInputAttribute<PersonValidator>(services);
-
         }
 
-        protected IMvcBuilder ConfigureMvcForValidateInputAttribute<T>(IServiceCollection services) where T : class
+        public virtual void ConfigureValidation(IServiceCollection services)
+        {
+            services.AddValidateInputAttribute<PersonValidator>();
+        }
+
+        public IMvcBuilder ConfigureMvcForValidateInputAttribute<T>() where T : class
+        {
+            return ConfigureMvcForValidateInputAttribute<T>(Services);
+        }
+
+        public IMvcBuilder ConfigureMvcForValidateInputAttribute<T>(IServiceCollection services) where T : class
         {
             return
                 services.AddMvc()
                     .AddValidatorsFromAssemblyContaining<T>();
         }
 
-        protected IMvcBuilder ConfigureMvcForValidateInputFilter<T>(IServiceCollection services) where T : class
+        public IMvcBuilder ConfigureMvcForValidateInputFilter<T>() where T : class
         {
-            var mvcBuilder = ConfigureMvcForValidateInputAttribute<T>(services);
-            mvcBuilder.AddActionFilterValidator<T>();
-            return mvcBuilder;
+            return ConfigureMvcForValidateInputFilter<PersonValidator>(Services);
+        }
+
+        public IMvcBuilder ConfigureMvcForValidateInputFilter<T>(IServiceCollection services) where T : class
+        {
+            return
+                services.AddValidateInputFilter<PersonValidator>(); 
+
+        }
+
+        public IServiceCollection AddScopedService<TService, TServiceImpl>() where TService : class
+                                                               where TServiceImpl : class, TService
+        {
+           return  Services.AddScoped<TService, TServiceImpl>();
+        }
+
+        public  IServiceCollection AddScoped<TService>(Func<IServiceProvider, TService> implementationFactory) 
+            where TService : class
+        {
+            return Services.AddScoped(implementationFactory);
         }
 
 
