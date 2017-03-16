@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using FluentValidation.Results;
 using NSubstitute;
 
 using dg.common.validation;
 using dg.contract;
 using dg.validator;
-using FluentValidation.Results;
+using dg.test.infrastructure;
 
 namespace dg.unittest.common
 {

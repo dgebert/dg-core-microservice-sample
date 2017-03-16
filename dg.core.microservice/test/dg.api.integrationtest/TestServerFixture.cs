@@ -20,9 +20,14 @@ namespace dg.unittest.api
 {
     public class TestServerFixture: IDisposable
     {
+        public const string ConnStringKey = "ConnectionStrings:DefaultConnection";
+        private string ConnectionString;
+
         public HttpClient Client { get; }
         public TestServer Server { get; }
         public IConfigurationRoot Configuration { get; }
+        public DbContextOptions<PeopleContext> DbContextOptions { get;  }
+        Action<DbContextOptionsBuilder> DbContextOptionsAction { get; }
 
         public TestServerFixture()
         {
@@ -31,6 +36,7 @@ namespace dg.unittest.api
                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                   .AddEnvironmentVariables();
             Configuration = builder.Build();
+            ConnectionString = Configuration[ConnStringKey];
 
             var webHostBuilder = new WebHostBuilder()
                     .UseEnvironment("Testing")
@@ -45,14 +51,13 @@ namespace dg.unittest.api
             Server = new TestServer(webHostBuilder);
             Client = Server.CreateClient();
             Client.BaseAddress = new Uri(@"http://localhost:5000/");
-
         }
       
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
             services.AddValidateInputAttribute<PersonValidator>();
-            services.AddDbContext<PeopleContext>(options => options.UseSqlServer("ConnectionStrings:DefaultConnection"));     
+            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(ConnectionString));     
             services.AddScoped<IPeopleService, PeopleSqlService>();
         }
 
@@ -76,11 +81,26 @@ namespace dg.unittest.api
             return content;
         }
 
-        public ValidationResult GetValidationResult(HttpResponseMessage response)
+        public PeopleContext GetDb()
         {
-            var json = response.Content.ReadAsStringAsync().Result;
-            var errorResponse = JsonConvert.DeserializeObject<ValidationResult>(json);
-            return errorResponse;
+            var dbContextOptions = new DbContextOptionsBuilder<PeopleContext>()
+                              .UseSqlServer(ConnectionString)
+                              .Options;
+            return new PeopleContext(dbContextOptions);
+        }
+
+        internal void SetUpDb()
+        {
+            TearDownDb();
+        }
+        
+        internal void TearDownDb()
+        {
+            using (var db = GetDb())
+            {
+                db.Person.RemoveRange(db.Person);
+                db.SaveChanges();
+            }
         }
     }
 }

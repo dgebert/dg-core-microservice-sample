@@ -15,7 +15,8 @@ namespace dg.dataservice
                 Email = p.Email,
                 PhoneNumber = p.PhoneNumber,
                 BirthDate = p.BirthDate,
-                ModifiedOn = p.ModifiedOn
+                ModifiedOn = p.ModifiedOn,
+                ModifiedBy = p.ModifiedBy
             };
         }
 
@@ -37,6 +38,7 @@ namespace dg.dataservice
             target.Email = source.Email;
             target.PhoneNumber = source.PhoneNumber;
             target.ModifiedOn = source.ModifiedOn == System.DateTime.MinValue ? System.DateTime.UtcNow : source.ModifiedOn;
+            target.ModifiedBy = source.ModifiedBy;
             return target;
         }
     }

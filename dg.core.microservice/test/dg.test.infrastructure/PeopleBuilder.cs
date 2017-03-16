@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using dg.contract;
 
-
-namespace dg.unittest
+namespace dg.test.infrastructure
 {
     public class PeopleBuilder
     {
-  
-
         public List<Person> BuildMany(int n, string suffix = null)
         {
             var people = new List<Person>();
@@ -20,7 +17,7 @@ namespace dg.unittest
             return people;
         }
 
-        private Person Build(int i = 1, bool isDeleted = false, string suffix = null)
+        public Person Build(int i = 1, bool isDeleted = false, string suffix = null)
         {
             suffix = suffix ?? string.Empty;
             var p = new Person

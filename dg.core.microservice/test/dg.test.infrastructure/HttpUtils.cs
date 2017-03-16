@@ -10,7 +10,7 @@ using NSubstitute;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace dg.unittest
+namespace dg.test.infrastructure
 {
     public static class HttpUtils
     {
@@ -45,11 +45,15 @@ namespace dg.unittest
         }
 
      
-        public static ValidationResult GetValidationResult(this HttpResponseMessage response)
+        public static T GetResult<T> (this HttpResponseMessage response)
         {
             var json = response.Content.ReadAsStringAsync().Result;
-            var errorResponse = JsonConvert.DeserializeObject<ValidationResult>(json);
-            return errorResponse;
+            var result = JsonConvert.DeserializeObject<T>(json);
+            return result;
+        }
+        public static ValidationResult GetValidationResult(this HttpResponseMessage response)
+        {
+            return response.GetResult<ValidationResult>();
         }
     }
 }
