@@ -60,6 +60,11 @@ namespace dg.unittest.api
             Services = services;
             services.AddMvc();
 
+            ConfigureCustomServices(services);
+        }
+
+        public virtual void ConfigureCustomServices(IServiceCollection services)
+        {
             ConfigureValidation(services);
             services.AddScoped<IPeopleService>(x => new PeopleSqlService(null));
         }
@@ -78,7 +83,7 @@ namespace dg.unittest.api
         {
             return
                 services.AddMvc()
-                    .AddValidatorsFromAssemblyContaining<T>();
+                    .AddValidateInputAttribute<T>();
         }
 
         public IMvcBuilder ConfigureMvcForValidateInputFilter<T>() where T : class
@@ -109,7 +114,7 @@ namespace dg.unittest.api
         protected virtual IMvcBuilder ConfigureFluentValidation<T>(IServiceCollection services) where T: class
         {
             var mvcBuilder = services.AddMvc();
-            mvcBuilder.AddValidatorsFromAssemblyContaining<T>();
+            mvcBuilder.AddValidateInputAttribute<T>();
             return mvcBuilder;
         }
 

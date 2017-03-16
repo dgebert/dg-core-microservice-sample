@@ -22,7 +22,8 @@
     "dg.contract": "1.0.0-*",
     "dg.dataservice": "1.0.0-*",
     "dg.document.db": "1.0.0-*",
-    "dg.repository": "1.0.0-*"
+    "dg.repository": "1.0.0-*",
+    "dg.validator": "1.0.0-*"
 
   },
 

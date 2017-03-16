@@ -34,19 +34,19 @@ namespace dg.api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services
-                .AddMvc(config =>
+            var mvcBuilder = services
+                .AddMvc(options =>
                 {
-                    config.Filters.Add(typeof(ApiExceptionFilter));
-                })
-          //      .AddActionFilterValidator<PersonValidator>(services)    //  This global action filter requires no decoration of Controller Methods
-                .AddValidatorsFromAssemblyContaining<PersonValidator>();  // This requires decorating Controller methods with [ValidateInput]
+                    options.Filters.Add(typeof(ApiExceptionFilter));
+                });
 
-            // Register services 
+            // This requires decorating Controller methods with [ValidateInput]
+            mvcBuilder.AddValidateInputAttribute<PersonValidator>();  
 
-            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            // DbContext and Data Service
+            var connString = Configuration["ConnectionStrings:DefaultConnection"];
+            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(connString));
             services.AddScoped<IPeopleService>(x => new PeopleSqlService(x.GetService<PeopleContext>()));
-
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

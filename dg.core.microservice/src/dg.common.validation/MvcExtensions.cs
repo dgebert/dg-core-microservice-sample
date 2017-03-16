@@ -4,7 +4,7 @@ using FluentValidation.AspNetCore;
 
 namespace dg.common.validation
 {
-    public static class ConfigurationExtensions
+    public static class MvcExtensions
     {
 
         public static IMvcBuilder AddValidateInputFilter<T>(this IServiceCollection services) where T : class
@@ -17,7 +17,7 @@ namespace dg.common.validation
 
         public static IMvcBuilder AddActionFilterValidator<T>(this IMvcBuilder mvcBuilder) where T : class
         {
-            mvcBuilder.AddValidatorsFromAssemblyContaining<T>();
+            mvcBuilder.AddValidateInputAttribute<T>();
             mvcBuilder.AddMvcOptions(options => options.Filters.Add(new ValidateInputFilter()));
             return mvcBuilder;
         }
@@ -27,10 +27,10 @@ namespace dg.common.validation
             return
                   services
                        .AddMvc()
-                       .AddValidatorsFromAssemblyContaining<T>();
+                       .AddValidateInputAttribute<T>();
         }
 
-        public static IMvcBuilder AddValidatorsFromAssemblyContaining<T>(this IMvcBuilder mvcBuilder) where T : class
+        public static IMvcBuilder AddValidateInputAttribute<T>(this IMvcBuilder mvcBuilder) where T : class
         {
             mvcBuilder.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<T>());
             mvcBuilder.Services.AddScoped<IActionContextModelValidator, ActionContextModelValidator>();

@@ -1,104 +1,28 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
-
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using FluentValidation.Results;
 
 using dg.common.validation;
 using dg.contract;
+using dg.dataservice;
+using dg.validator;
 
-namespace dg.test.infrastructure
+namespace dg.unittest.api
 {
-    public class TestServerFixture
+    public abstract class TestServerFixture
     {
-        private const string ENV_KEY = "ASPNETCORE_ENVIRONMENT";
-        protected string EnvironmentName;
-        protected IConfigurationRoot Configuration { get; set; }
-        protected TestServer Server { get; set; }
-        public HttpClient Client { get; set; }
-
-        public TestServerFixture()
-        {
-            SetEnvironment();
-            BuildConfiguration();
-            CreateTestServer(BuildWebHost());
-        }
-
-        private void SetEnvironment()
-        {
-            EnvironmentName = Environment.GetEnvironmentVariable(ENV_KEY);
-            if (string.IsNullOrWhiteSpace(EnvironmentName))
-            {
-                EnvironmentName = "Local";
-            }
-        }
-
-        private void BuildConfiguration()
-        {
-            var builder = new ConfigurationBuilder()
-                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                   .AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true)
-                   .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-        }
-
-        private IWebHostBuilder BuildWebHost()
-        {
-            var webHostBuilder = new WebHostBuilder()
-              .UseKestrel()
-            //  .UseContentRoot(PlatformServices.Default.Application.ApplicationBasePath)
-              .ConfigureServices(ConfigureServices)
-              .Configure(ConfigureApp)
-              .UseEnvironment(EnvironmentName);
-
-            return webHostBuilder;
-        }
-
-        private void CreateTestServer(IWebHostBuilder webHost)
-        {
-            Server = new TestServer(webHost);
-            Client = Server.CreateClient();
-            Client.BaseAddress = ClientBaseAddress;
-        }
+     
 
 
-        protected virtual Uri ClientBaseAddress
-        {
-            get { return new Uri("http://localhost:5000"); }
-        }
-
-        public virtual void ConfigureApp(IApplicationBuilder app)
-        {
-            app.UseMvc();
-        }
-
-        public virtual void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton(x => Configuration);
-            services.AddMvc();
-        }
-
-        protected IMvcBuilder ConfigureMvcForValidateInputAttribute<T>(IServiceCollection services) where T : class
-        {
-            return
-                services.AddMvc()
-                        .AddValidatorsFromAssemblyContaining<T>();
-        }
-
-        protected IMvcBuilder ConfigureMvcForValidateInputFilter<T>(IServiceCollection services) where T : class
-        {
-            var mvcBuilder = ConfigureMvcForValidateInputAttribute<T>(services);
-            mvcBuilder.AddActionFilterValidator<T>();
-            return mvcBuilder;
-        }
 
         public StringContent BuildRequestContent(Person person)
         {
@@ -113,6 +37,7 @@ namespace dg.test.infrastructure
             var errorResponse = JsonConvert.DeserializeObject<ValidationResult>(json);
             return errorResponse;
         }
-
     }
+
+
 }

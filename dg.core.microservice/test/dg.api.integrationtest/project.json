@@ -2,7 +2,6 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-
     "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Mvc.Core": "1.1.0",
     "Microsoft.AspNetCore.TestHost": "1.1.0",
@@ -17,17 +16,17 @@
     "Microsoft.Extensions.Configuration.FileExtensions": "1.1.0",
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
     "Microsoft.DotNet.InternalAbstractions": "1.0.500-preview2-1-003177",
-
     "xunit": "2.2.0",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "FluentAssertions": "4.19.2",
     "FluentValidation.AspNetCore": "6.4.0-rc4",
     "NSubstitute": "2.0.2",
-
     "dg.api": "1.0.0-*",
     "dg.contract": "1.0.0-*",
     "dg.dataservice": "1.0.0-*",
-    "dg.common.validation": "1.0.0-*"
+    "dg.common.validation": "1.0.0-*",
+    "dg.test.infrastructure": "1.0.0-*",
+    "dg.repository": "1.0.0-*"
   },
 
   "testRunner": "xunit",
@@ -42,6 +41,16 @@
         }
       }
     }
+  },
+
+
+  "publishOptions": {
+    "include": [
+      "wwwroot",
+      "**/*.cshtml",
+      "appsettings.json",
+      "web.config"
+    ]
   }
 
 }
