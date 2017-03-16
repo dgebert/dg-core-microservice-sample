@@ -51,8 +51,26 @@ namespace dg.unittest.api
             Server = new TestServer(webHostBuilder);
             Client = Server.CreateClient();
             Client.BaseAddress = new Uri(@"http://localhost:5000/");
+
+            TestDbConnection();
         }
-      
+
+        private void TestDbConnection()
+        {
+            using (var db = GetDb())
+            {
+                try
+                {
+                    db.Database.GetDbConnection().Open();
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Invalid connection string - check appSettings and your target db");
+                    throw ex;
+                }
+            }
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
