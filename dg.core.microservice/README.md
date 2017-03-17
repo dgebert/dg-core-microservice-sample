@@ -236,7 +236,7 @@ An important feature of XUnit is its  test lifecycle support. One time test fixt
 [NSubstittue](http://nsubstitute.github.io/) might be the simplest, most succinct, and easy to use mocking library. The easiest way to understand it, is by using it and exploring its features. It has also kept up with the volatile evoluation of .NET Core. 
 
 ### FluentAssertions
-All mocking libraries provide `Assert` functionality. [Fluent Assertions] goes farther with its comprehensive set of extension methods that allow you to more naturally specify expected outcomes with its fluent syntax.
+All mocking libraries provide `Assert` functionality. [Fluent Assertions](http://fluentassertions.com/) goes farther with its comprehensive set of extension methods that allow you to more naturally specify expected outcomes with its fluent syntax.
 
 ### .NET Core features supporting unit testing
 Unit tests employ various ASP.NET Core features to isolate the SUT (system or subject under test). A summary of main features is as follows: 
