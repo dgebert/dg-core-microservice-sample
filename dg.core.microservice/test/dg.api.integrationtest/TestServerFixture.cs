@@ -27,8 +27,7 @@ namespace dg.unittest.api
         public TestServer Server { get; }
         public IConfigurationRoot Configuration { get; }
         public DbContextOptions<PeopleContext> DbContextOptions { get;  }
-        Action<DbContextOptionsBuilder> DbContextOptionsAction { get; }
-
+ 
         public TestServerFixture()
         {
             var builder = new ConfigurationBuilder()

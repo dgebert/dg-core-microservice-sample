@@ -21,7 +21,6 @@ namespace dg.api.integrationtest
         public PeopleApiTest(TestServerFixture fixture)
         {
             _fixture = fixture;
-
             _fixture.SetUpDb();
         }
 

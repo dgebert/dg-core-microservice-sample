@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -10,15 +10,15 @@ using dg.repository.Models;
 
 namespace dg.unitest.dataservice
 {
-    public class PeopleServiceTest
+    public class PeopleSqlServiceTest
     {
         DbContextOptions<PeopleContext> _options;
 
-        public PeopleServiceTest()
+        public PeopleSqlServiceTest()
         {
             // Create a fresh service provider, and therefore a fresh 
             // InMemory database instance.
-            var serviceProvider = new ServiceCollection()
+            IServiceProvider serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase()
                 .BuildServiceProvider();
 
