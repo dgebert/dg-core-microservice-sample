@@ -1,4 +1,5 @@
-﻿using PersonContract = dg.contract.Person;
+﻿using System;
+using PersonContract = dg.contract.Person;
 using PersonEntity = dg.repository.Models.Person;
 
 namespace dg.dataservice
@@ -40,6 +41,15 @@ namespace dg.dataservice
             target.ModifiedOn = source.ModifiedOn == System.DateTime.MinValue ? System.DateTime.UtcNow : source.ModifiedOn;
             target.ModifiedBy = source.ModifiedBy;
             return target;
+        }
+
+    
+        public static bool IsEquivalentTo(this PersonContract person, PersonContract otherPerson)
+        {
+            return string.Equals(person.FirstName, person.FirstName, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(person.LastName, person.LastName, StringComparison.CurrentCultureIgnoreCase) &&
+                    string.Equals(person.Email, person.Email, StringComparison.CurrentCultureIgnoreCase) &&
+                    person.BirthDate.Equals(person.BirthDate);
         }
     }
 }

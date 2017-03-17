@@ -1,15 +1,22 @@
 ﻿using System.Linq;
 using Xunit;
 using FluentAssertions;
+using NSubstitute;
 using dg.contract;
 using dg.validator;
+using dg.dataservice;
+
 
 namespace dg.unittest.validator
 {
     public class PersonValidatorTest
     {
+        IPeopleService _peopleService;
+
         public PersonValidatorTest()
         {
+            _peopleService = Substitute.For<IPeopleService>();
+            _peopleService.FindByEmail(Arg.Any<string>()).Returns((Person)null);
         }
 
         [Fact]
@@ -18,9 +25,10 @@ namespace dg.unittest.validator
             var person = new Person()
             {
                 FirstName = string.Empty,
-                LastName = "Willis"
+                LastName = "Willis",
+                Email = "somebody@gmail.com"
             };
-            var validator = new PersonValidator();
+            var validator = BuildPersonValidator();
 
             //act
             var result = validator.Validate(person);
@@ -36,9 +44,10 @@ namespace dg.unittest.validator
             var person = new Person()
             {
                 FirstName = string.Empty,
-                LastName = "Willis"
+                LastName = "Willis",
+                Email = "somebody@gmail.com"
             };
-            var validator = new PersonValidator();
+            var validator = BuildPersonValidator();
             //act
             var result = validator.Validate(person);
 
@@ -53,9 +62,10 @@ namespace dg.unittest.validator
             var person = new Person()
             {
                 FirstName = "supercalifragilisticexpialidocious",
-                LastName = "Willis"
+                LastName = "Willis",
+                Email = "somebody@gmail.com"
             };
-            var validator = new PersonValidator();
+            var validator = BuildPersonValidator();
 
             //act
             var result = validator.Validate(person);
@@ -72,9 +82,11 @@ namespace dg.unittest.validator
             var person = new Person()
             {
                 FirstName = "Not@Valid&",
-                LastName = "Willis"
+                LastName = "Willis",
+                Email = "somebody@gmail.com"
+
             };
-            var validator = new PersonValidator();
+            var validator = BuildPersonValidator();
 
             //act
             var result = validator.Validate(person);
@@ -82,6 +94,11 @@ namespace dg.unittest.validator
             //assert
             result.Errors.Should().NotBeEmpty();
             result.Errors.First().ErrorCode.Should().Be(PersonValidator.ErrorCode.FirstNameHasInvalidChars.ToString());
+        }
+
+        private PersonValidator BuildPersonValidator()
+        {
+            return new PersonValidator(_peopleService);
         }
     }
 }

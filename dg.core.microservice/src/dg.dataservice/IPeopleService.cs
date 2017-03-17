@@ -12,5 +12,7 @@ namespace dg.dataservice
         Person Update(Person p);
         bool Delete(int id);
         Person Find(Person p);
+
+        Person FindByEmail(string email);
     }
 }

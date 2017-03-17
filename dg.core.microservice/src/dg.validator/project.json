@@ -6,7 +6,8 @@
     "FluentValidation.AspNetCore": "6.4.0-rc4",
     "dg.contract": "1.0.0-*",
     "dg.repository": "1.0.0-*",
-    "dg.common.validation": "1.0.0-*"
+    "dg.common.validation": "1.0.0-*",
+    "dg.dataservice": "1.0.0-*"
   },
 
   "frameworks": {

@@ -75,7 +75,7 @@ namespace dg.api.controllers
         [HttpPost("people3")]
         public async Task<IActionResult> AddPerson1([FromBody] Person person)
         {
-            var validationResult = new PersonValidator().Validate(person);
+            var validationResult = new PersonValidator(_peopleService).Validate(person);
             if (!validationResult.IsValid)
             {
                 return new BadRequestObjectResult(validationResult);

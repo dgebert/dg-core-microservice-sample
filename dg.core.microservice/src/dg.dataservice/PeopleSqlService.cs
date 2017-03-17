@@ -110,5 +110,14 @@ namespace dg.dataservice
             return similarPerson;                          
         }
 
+        public PersonContract FindByEmail(string email)
+        {
+            var pe = _db.Person.FirstOrDefault(p => string.Equals(p.Email, email, StringComparison.CurrentCultureIgnoreCase));
+            if (pe == null)
+            {
+                return null;
+            }
+            return pe.ToPersonContract();
+        }
     }
 }

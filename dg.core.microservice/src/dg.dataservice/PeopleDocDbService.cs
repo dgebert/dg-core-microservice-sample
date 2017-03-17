@@ -35,5 +35,10 @@ namespace dg.dataservice
         {
             throw new NotImplementedException();
         }
+
+        public Person FindByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
