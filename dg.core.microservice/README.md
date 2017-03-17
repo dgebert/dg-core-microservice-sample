@@ -220,7 +220,7 @@ public interface IPeopleService
 For implementations, see `PeopleSqlService` and `PeopleDocDbService`.
 
 
-## Unit Testing - `dg.unittest`
+## Unit Testing 
 
 ### Xunit
 Unit tests use the latest `Xunit` framework. Some of the advantages of this framework over NUnit, MSUnit, etc, is its growing popularity, adoption by Microsoft, and its .NET Core support.  In fact, Visual Studio 2017 includes built-in support for xUnit.net projects, as does `dotnet new`.
