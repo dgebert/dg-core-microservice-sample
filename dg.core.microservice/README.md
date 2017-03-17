@@ -2,7 +2,7 @@
 
 ## Microservice Architecture
 
-![](./CoreWebApiArchitecture.PNG?raw=true "Microsservice Web API Architecture") 
+![](../CoreWebApiArchitecture.PNG?raw=true "Microsservice Web API Architecture") 
 
 ### People Service 
 The sample microservice implementation is a people service which provides CRUD access to a backend People db.  A data service encapsulates the different db data access implementations. Currently there are two DB implementations: SQL Server and Document DB (no SQL). Other target stores - queues, files, message bus, etc - could also be implemented and abstracted with this data service layer.
@@ -20,7 +20,7 @@ The sample microservice implementation is a people service which provides CRUD a
 
 ## Swagger generated docs
 
-![](./Swagger.PNG?raw=true "Swagger provides a way to describe API - JSON outlines the names, order, and other details of API.") 
+![](../Swagger.PNG?raw=true "Swagger provides a way to describe API - JSON outlines the names, order, and other details of API.") 
 
 ### Projects/Assemblies
 
