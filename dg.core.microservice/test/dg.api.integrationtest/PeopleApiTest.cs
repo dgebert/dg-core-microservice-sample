@@ -129,7 +129,7 @@ namespace dg.api.integrationtest
         }
 
         [Fact]
-        public async Task GivenPeopleExist_WhenGetMany_ShouldReturnPerson()
+        public async Task GivenPeopleExist_WhenGetMany_ShouldReturnMany()
         {
             using (var db = _fixture.GetDb())
             {
@@ -211,5 +211,144 @@ namespace dg.api.integrationtest
                 }
             }
         }
+
+        [Fact]
+        public async Task GivenPersonExists_WhenUpdate_ShouldReturnOk()
+        {
+            using (var db = _fixture.GetDb())
+            {
+                try
+                {
+                    var person = new PeopleBuilder().Build(1);
+                    db.Person.Add(person.ToPersonEntity());
+                    db.SaveChanges();
+
+
+                    person.PhoneNumber = "555-222-1111";
+                    var response = await _fixture.Client.PutAsync("people", person);
+
+                    response.StatusCode.Should().Be(HttpStatusCode.OK);
+                    var personInDb = response.GetResult<Person>();
+                    personInDb.ShouldBeEquivalentTo(person);
+
+                    var uri = string.Format("people/{0}", personInDb.Id);
+                    response = await _fixture.Client.GetAsync(uri);
+                    personInDb = response.GetResult<Person>();
+                    personInDb.ShouldBeEquivalentTo(person);
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                    throw;
+                    // TODO: Handle failure
+                }
+            }
+        }
+
+        [Fact]
+        public async Task GivenPersonDoesNotExist_WhenUpdate_ShouldReturnNotFound()
+        {
+            using (var db = _fixture.GetDb())
+            {
+                try
+                {
+                    var person = new PeopleBuilder().Build(11);
+                    person.PhoneNumber = "555-222-1111";
+                    var response = await _fixture.Client.PutAsync("people", person);
+
+                    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                    throw;
+                    // TODO: Handle failure
+                }
+            }
+        }
+
+        [Fact]
+        public async Task GivenPersonExists_WhenDelete_ShouldReturnOK()
+        {
+            using (var db = _fixture.GetDb())
+            {
+                try
+                {
+                  var id = 1;
+                   var person = new PeopleBuilder().Build(id);
+                    db.Person.Add(person.ToPersonEntity());
+                    db.SaveChanges();
+
+                    var uri = string.Format("people/{0}", id);
+                    var response = await _fixture.Client.GetAsync(uri);
+                    response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                    uri = string.Format("people/{0}", id);
+                    response = await _fixture.Client.DeleteAsync(uri);
+                    response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                    uri = string.Format("people/{0}", id);
+                    response = await _fixture.Client.GetAsync(uri);
+                    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                    throw;
+                    // TODO: Handle failure
+                }
+            }
+        }
+
+        [Fact]
+        public async Task GivenPersonExist_ButIsDeleted_WhenDelete_ShouldReturnNotFound()
+        {
+            using (var db = _fixture.GetDb())
+            {
+                try
+                {
+                    var id = 1;
+                    var person = new PeopleBuilder().Build(id);
+                    var personEntity = person.ToPersonEntity();
+                    personEntity.IsDeleted = true;
+                    db.Person.Add(personEntity);
+                    db.SaveChanges();
+
+                    var uri = string.Format("people/{0}", id);
+                    var response = await _fixture.Client.DeleteAsync(uri);
+
+                    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+               }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                    throw;
+                    // TODO: Handle failure
+                }
+            }
+        }
+
+        [Fact]
+        public async Task GivenPersonDoesNotExist_WhenDelete_ShouldReturnNotFound()
+        {
+            using (var db = _fixture.GetDb())
+            {
+                try
+                {
+                    var uri = string.Format("people/{0}", 55);
+                    var response = await _fixture.Client.DeleteAsync(uri);
+
+                    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex);
+                    throw;
+                    // TODO: Handle failure
+                }
+            }
+        }
+
     }
 }

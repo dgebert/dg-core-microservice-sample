@@ -23,7 +23,7 @@ namespace dg.test.infrastructure
         public static async Task<HttpResponseMessage> PutAsync(this HttpClient client, string uri, object o)
         {
             var stringContent = BuildRequestContent(o);
-            return await client.PostAsync(uri, stringContent);
+            return await client.PutAsync(uri, stringContent);
         }
     }
 }

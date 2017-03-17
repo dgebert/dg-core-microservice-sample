@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Xunit;
-using NSubstitute;
-using FluentAssertions;
-using dg.api.controllers;
-using dg.dataservice;
+﻿using dg.api.controllers;
 using dg.contract;
+using dg.dataservice;
 using dg.test.infrastructure;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NSubstitute;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace dg.unittest.controller
 {

@@ -123,7 +123,7 @@ namespace dg.api.controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("people/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             bool result = await Task.Factory.StartNew(() =>
