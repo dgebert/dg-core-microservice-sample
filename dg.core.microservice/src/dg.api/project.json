@@ -1,6 +1,5 @@
-﻿{
+{
   "dependencies": {
-  
     "Microsoft.AspNetCore.Diagnostics": "1.1.0",
     "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Routing": "1.1.0",
@@ -19,13 +18,13 @@
     "Swashbuckle.AspNetCore.SwaggerGen": "1.0.0-rc3",
     "Swashbuckle.AspNetCore.SwaggerUI": "1.0.0-rc3",
     //   "FluentValidation.AspNetCore": "6.4.0-rc4",
-
     "dg.common.exceptionhandling": "1.0.0-*",
     "dg.common.logging": "1.0.0-*",
     "dg.common.validation": "1.0.0-*",
     "dg.contract": "1.0.0-*",
     "dg.dataservice": "1.0.0-*",
-    "dg.validator": "1.0.0-*"
+    "dg.validator": "1.0.0-*",
+ 
   },
 
   "tools": {

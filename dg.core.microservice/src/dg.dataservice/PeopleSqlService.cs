@@ -6,7 +6,7 @@ using dg.repository.Models;
 
 using PersonContract = dg.contract.Person;
 using PersonEntity = dg.repository.Models.Person;
-
+using dg.contract;
 
 namespace dg.dataservice
 {
@@ -58,6 +58,11 @@ namespace dg.dataservice
 
         public PersonContract Create(PersonContract person)
         {
+            if (Find(person.ToPersonEntity()) != null)
+            {
+                return null;
+            }
+
             var personEntity = person.ToPersonEntity();
             _db.Person.Add(personEntity);
             _db.SaveChanges();
@@ -78,11 +83,31 @@ namespace dg.dataservice
         }
 
 
+        public PersonContract Find(PersonContract p)
+        {
+            var pe = Find(p.ToPersonEntity());
+            if (pe == null)
+            {
+                return null;
+            }
+            return pe.ToPersonContract();
+        }
+
         private PersonEntity Find(int id, bool respectDelete = true)
         {
             return respectDelete ?
                  _db.Person.FirstOrDefault(p => p.Id == id && !p.IsDeleted) :
                   _db.Person.FirstOrDefault(p => p.Id == id);
+        }
+
+        private PersonEntity Find(PersonEntity pe)
+        {
+            var similarPerson = _db.Person.FirstOrDefault(p =>
+                                    string.Equals(p.FirstName, pe.FirstName, StringComparison.CurrentCultureIgnoreCase) &&
+                                    string.Equals(p.LastName, pe.LastName, StringComparison.CurrentCultureIgnoreCase) &&
+                                    string.Equals(p.Email, pe.Email, StringComparison.CurrentCultureIgnoreCase) &&
+                                    p.BirthDate.Equals(pe.BirthDate));
+            return similarPerson;                          
         }
 
     }

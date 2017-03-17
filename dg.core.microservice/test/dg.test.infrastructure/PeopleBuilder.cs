@@ -23,17 +23,16 @@ namespace dg.test.infrastructure
             var p = new Person
             {
                 Id = i,
-                FirstName = string.Format("First_{0}_{1}", i, suffix),
+                FirstName = string.Format("FirstName{0}{1}", i, suffix),
                 LastName = string.Format("Last_{0}_{1}", i, suffix),
                 Email = string.Format("somebody_{0}_{1}@gmail.com", i, suffix),
                 BirthDate = new System.DateTime(1970 + i, i, i),
                 PhoneNumber = string.Format("2{0}4-5{0}2{0}-4{0}5{0}", i),
                 ModifiedOn = System.DateTime.UtcNow,
                 ModifiedBy = string.Format("TestBuilder_{0}", suffix)
-            //    IsDeleted = isDeleted
             };
             return p;
         }
-        //public Person Build
+        
     }
 }

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿
 using dg.common.validation;
 using dg.contract;
 using dg.dataservice;
 using dg.validator;
-using dg.common.logging;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+
 
 namespace dg.api.controllers
 {
@@ -75,7 +75,6 @@ namespace dg.api.controllers
         [HttpPost("people3")]
         public async Task<IActionResult> AddPerson1([FromBody] Person person)
         {
-
             var validationResult = new PersonValidator().Validate(person);
             if (!validationResult.IsValid)
             {
@@ -89,10 +88,20 @@ namespace dg.api.controllers
         {
             var result = await Task.Factory.StartNew(() =>
             {
-                var personInDb = _peopleService.Create(p);
+                var personInDb = _peopleService.Find(p);
+                if (personInDb != null)
+                {
+                    return null;
+                }
+
+                personInDb = _peopleService.Create(p);
                 return personInDb;
             });
 
+            if (result == null)  // duplicate - should this be a 400 determined by validation? 
+            {
+                return StatusCode(StatusCodes.Status409Conflict);  // 409 - duplicate 
+            }
             return Ok(result);
         }
 
@@ -105,6 +114,11 @@ namespace dg.api.controllers
                 var personInDb = _peopleService.Update(person);
                 return personInDb;
             });
+
+            if (result == null)
+            {
+                return NotFound();
+            }
 
             return Ok(result);
         }

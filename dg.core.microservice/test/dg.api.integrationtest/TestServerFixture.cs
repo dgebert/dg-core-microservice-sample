@@ -32,11 +32,19 @@ namespace dg.unittest.api
         public TestServerFixture()
         {
             var builder = new ConfigurationBuilder()
-                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                  .SetBasePath(Directory.GetCurrentDirectory())
                   .AddEnvironmentVariables();
             Configuration = builder.Build();
-            ConnectionString = Configuration[ConnStringKey];
+
+            // TODO:  get this working.... Works in Xunit test runner but not in Resharper test runner ??? 
+            //ConnectionString = Configuration[ConnStringKey];
+            ConnectionString = @"server=DGEBERT\SQLEXPRESS; Database = people; Integrated Security = true";
+
+            if (string.IsNullOrWhiteSpace(ConnectionString))
+            {
+                throw new ArgumentException("Cannot find connection string - check appsettings or where it is (not) located");
+            }
 
             var webHostBuilder = new WebHostBuilder()
                     .UseEnvironment("Testing")
@@ -52,9 +60,9 @@ namespace dg.unittest.api
             Client = Server.CreateClient();
             Client.BaseAddress = new Uri(@"http://localhost:5000/");
 
-            TestDbConnection();
+        //    TestDbConnection();
         }
-
+       
         private void TestDbConnection()
         {
             using (var db = GetDb())
@@ -63,7 +71,7 @@ namespace dg.unittest.api
                 {
                     db.Database.GetDbConnection().Open();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine("Invalid connection string - check appSettings and your target db");
                     throw ex;

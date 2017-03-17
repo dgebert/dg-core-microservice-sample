@@ -30,9 +30,9 @@ namespace dg.validator
         {
             RuleForFirstName();
 
-            //RuleFor(p => p.LastName).NotEmpty().WithMessage("First Name is required");
-            //RuleFor(p => p.MembershipFee).GreaterThan(0).WithMessage("Membership is required");
-            //RuleFor(p => p.BirthDate).
+          //  RuleForLastName();
+          //  RuleForEmail();
+          //  RuleForBirthDate();
         }
 
         public override ValidationResult Validate(Person instance)
@@ -50,7 +50,7 @@ namespace dg.validator
                   .Length(0, 20)
                   .WithMessage("First name cannot exceed 20 characters.")
                   .WithErrorCode(ErrorCode.FirstNameInvalidLength.ToString())
-                  .Matches(@"^[A-Za-z\-\.\s]+$")
+                  .Matches(@"^[A-Za-z0-9\-\.\s]+$")
                   .WithMessage("First name contains invalid characters.")
                   .WithErrorCode(ErrorCode.FirstNameHasInvalidChars.ToString());              
         }

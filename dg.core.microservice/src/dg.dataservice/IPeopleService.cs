@@ -1,8 +1,6 @@
-﻿using dg.contract;
-using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using dg.contract;
 
 namespace dg.dataservice
 {
@@ -13,5 +11,6 @@ namespace dg.dataservice
         Person Create(Person p);
         Person Update(Person p);
         bool Delete(int id);
+        Person Find(Person p);
     }
 }

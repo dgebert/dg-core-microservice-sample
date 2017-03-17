@@ -30,5 +30,10 @@ namespace dg.dataservice
         {
             throw new NotImplementedException();
         }
+
+        public Person Find(Person p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
