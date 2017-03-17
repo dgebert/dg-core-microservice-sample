@@ -197,10 +197,11 @@ Two types of validation filters
 
 ## Data Service - Data Access to SQL or Document DB
 
-###  IDataService
+###  IPeopleService
 This interface provides the gateway into backend data stores.  The responsibility of a dataservice implementation is to provide transformation between contract and data store entities. Although contract and entities are almost identical, they both serve different purposes and help isolate and encapsulate each component layer. Also, contracts often are consolidations of more than one entity, so changing a contract to accommodate this data requirement does not affect the data access tier or have ripple effects throughout the service.
 
 Most importantly, this interface provides loose coupling between the Controller and data access. It allows us to provide all types of the implementations of data access. In this project, we provide two implementations: `PeopleSqlService` is a tradiontional SQL Server Repository using Entity Framework for SQL access. `PeopleDocDbService` is an implementation of a DB Document (No SQL) Repository using Microsoft's Document DB SDK, with a Document DB emulator (since not everyone has access to an Azure Document DB instance).
+
 
 `IPeopleService.cs`
 
@@ -215,6 +216,9 @@ public interface IPeopleService
     Person Find(Person p);
 }
 ```
+
+For implementations, see `PeopleSqlService` and `PeopleDocDbService`.
+
 
 ## Unit Testing - `dg.unittest`
 
