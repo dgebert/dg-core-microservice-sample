@@ -25,7 +25,7 @@ The sample microservice implementation is a people service which provides CRUD a
 ### Projects/Assemblies
 
 | Project | Description | 
-| --- | --- | ---
+| --- | --- | 
 | src | |
 | `dg.api` | Web API project - PeopleController provides endpoints and methods for Person CRUD operations| 
 | `dg.common.exceptionhandling`  | Exception handling framework components |
