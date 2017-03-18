@@ -424,5 +424,10 @@ Test sample:
 
     // ...
 }
-
 ```
+
+### Code Coverage
+
+Code Coverage results for the project. Some areas have been removed because they are still under development.
+
+![](../CodeCoverage.PNG?raw=true "Code Coverage results") 
