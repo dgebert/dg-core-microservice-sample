@@ -22,10 +22,12 @@ namespace dg.validator
             LastNameInvalidLength = 22,
             LastNameHasInvalidChars = 23,
 
-            EmailInvalidFormat = 33,
-            EmailNotUnique = 34,
+            EmailRequired = 31,
+            EmailInvalidFormat = 32,
+            EmailNotUnique = 33,
 
-            BirthDateInFuture = 41
+            BirthDateRequired = 41,
+            BirthDateInFuture = 42
         }
 
         IPeopleService _peopleService;
@@ -80,24 +82,38 @@ namespace dg.validator
             return RuleFor(p => p.Email)
                   .NotEmpty()
                   .WithName("Email is required.")
+                  .WithErrorCode(ErrorCode.EmailRequired.ToString())
                   .EmailAddress()
+                  .WithErrorCode(ErrorCode.EmailInvalidFormat.ToString())
                   .WithMessage("A valid Email is required.")
-                  //.Must(BeUniqueEmail)
-                  //.WithMessage("This Email is already in use")
-                  ;
+                  .Must(BeUniqueEmail)
+                  .WithMessage("This Email is already in use")
+                  .WithErrorCode(ErrorCode.EmailNotUnique.ToString());
 
 
         }
 
+        private IRuleBuilderOptions<Person, DateTime> RuleForBirthDate()
+        {
+            return RuleFor(p => p.BirthDate)
+                  .NotEmpty()
+                  .WithName("BirthDate is required.")
+                  .WithErrorCode(ErrorCode.BirthDateRequired.ToString());
+        }
+
         private bool BeUniqueEmail(Person editedPerson, string email)
         {
-            return true;  // until I get a better solutin for this - Add vs Update
+            //       return true;  // until I get a better solutin for this - Add vs Update
 
-            //var dup = _peopleService.GetAll()
-            //                        .Where(p => !p.IsEquivalentTo(editedPerson) && 
-            //                                 string.Equals(p.Email, editedPerson.Email, StringComparison.CurrentCultureIgnoreCase))
-            //                        .ToList(); 
-            //return (!dup.Any());
+            var peopleWithSameEmail = _peopleService.GetAll()
+                                                     .Where(p => p.HasSameEmail(email))
+                                                     .ToList();
+
+            if (peopleWithSameEmail.Count() == 0) { return true; }
+            if (peopleWithSameEmail.Count() >= 2) { return false; }
+
+            var personEithSameEmail = peopleWithSameEmail.First();
+            return personEithSameEmail.Id == editedPerson.Id;
         }
     }
 }

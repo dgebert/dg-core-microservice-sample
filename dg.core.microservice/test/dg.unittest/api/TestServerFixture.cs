@@ -10,15 +10,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NSubstitute;
 
 using dg.common.validation;
 using dg.contract;
 using dg.dataservice;
 using dg.validator;
+using dg.test.infrastructure;
 
 namespace dg.unittest.api
 {
-    public class TestServerFixture
+    public abstract class TestServerFixture
     {
         public IConfigurationRoot Config { get; }
         public HttpClient Client { get; }
@@ -65,14 +67,24 @@ namespace dg.unittest.api
 
         public virtual void ConfigureCustomServices(IServiceCollection services)
         {
-            ConfigureValidation(services);
-            services.AddScoped<IPeopleService>(x => new PeopleSqlService(null));
+             ConfigurePeopleService(services);
+             ConfigureValidation(services);
         }
 
-        public virtual void ConfigureValidation(IServiceCollection services)
+        // We are mocking service just to isolate PersonValidator in http call to controller
+        public virtual void ConfigurePeopleService(IServiceCollection services)
         {
-            services.AddValidateInputAttribute<PersonValidator>();
+            var people = new PeopleBuilder().BuildMany(5);
+            var mockPeopleService = Substitute.For<IPeopleService>();
+            mockPeopleService.GetAll().Returns(people);
+            mockPeopleService.Create(Arg.Any<Person>()).Returns(new Person());
+            mockPeopleService.Update(Arg.Any<Person>()).Returns(new Person());
+
+            services.AddScoped<IPeopleService>(x => mockPeopleService);
         }
+
+        public abstract void ConfigureValidation(IServiceCollection services);
+        
 
         public IMvcBuilder ConfigureMvcForValidateInputAttribute<T>() where T : class
         {
@@ -88,7 +100,7 @@ namespace dg.unittest.api
 
         public IMvcBuilder ConfigureMvcForValidateInputFilter<T>() where T : class
         {
-            return ConfigureMvcForValidateInputFilter<PersonValidator>(Services);
+            return ConfigureMvcForValidateInputFilter<T>(Services);
         }
 
         public IMvcBuilder ConfigureMvcForValidateInputFilter<T>(IServiceCollection services) where T : class

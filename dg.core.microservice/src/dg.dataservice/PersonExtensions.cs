@@ -44,12 +44,5 @@ namespace dg.dataservice
         }
 
     
-        public static bool IsEquivalentTo(this PersonContract person, PersonContract otherPerson)
-        {
-            return string.Equals(person.FirstName, person.FirstName, StringComparison.CurrentCultureIgnoreCase) &&
-                    string.Equals(person.LastName, person.LastName, StringComparison.CurrentCultureIgnoreCase) &&
-                    string.Equals(person.Email, person.Email, StringComparison.CurrentCultureIgnoreCase) &&
-                    person.BirthDate.Equals(person.BirthDate);
-        }
     }
 }

@@ -1,11 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
 using Xunit;
 using FluentAssertions;
 using NSubstitute;
 using dg.contract;
 using dg.validator;
 using dg.dataservice;
-
 
 namespace dg.unittest.validator
 {
@@ -16,7 +18,7 @@ namespace dg.unittest.validator
         public PersonValidatorTest()
         {
             _peopleService = Substitute.For<IPeopleService>();
-            _peopleService.FindByEmail(Arg.Any<string>()).Returns((Person)null);
+            _peopleService.GetAll().Returns((new List<Person>()));
         }
 
         [Fact]
@@ -94,6 +96,100 @@ namespace dg.unittest.validator
             //assert
             result.Errors.Should().NotBeEmpty();
             result.Errors.First().ErrorCode.Should().Be(PersonValidator.ErrorCode.FirstNameHasInvalidChars.ToString());
+        }
+
+        [Fact]
+        public void GivenEmailIsInvalid_WhenValidate_ShouldFailWithError()
+        {
+            var person = new Person()
+            {
+                FirstName = "Bruce",
+                LastName = "Willis",
+                Email = "somebody@gmail"
+
+            };
+            var validator = BuildPersonValidator();
+
+            //act
+            var result = validator.Validate(person);
+
+            //assert
+            result.Errors.Should().NotBeEmpty();
+            result.Errors.First().ErrorCode.Should().Be(PersonValidator.ErrorCode.EmailInvalidFormat.ToString());
+        }
+
+
+        public static IEnumerable<object> SamplePeopleWithSameEmail
+        {
+            get
+            {
+                return new object[]
+                {
+                     new object[] { new Person(1, "Bruce", "Willis", "bwillis@gmail.com", "214-345-9999", new DateTime(1970, 11, 14)) } ,
+                     new object[] { new Person(1, "Bill", "Walton", "bwillis@gmail.com", "111-999-2333", new DateTime(1985, 1, 1)) } ,
+                     new object[] { new Person(1, "Brad", "Watson", "bwillis@gmail.com", "111-222-3333", new DateTime(1985, 1, 1)) }
+               };
+            }
+        }
+
+       // [Fact]
+          [Theory, MemberData("SamplePeopleWithSameEmail")]
+        public void GivenEditedPerson_EqualToPersonBeingValidated_WithSameEmail_WhenValidate_ShouldSucceed(Person p)
+        {
+            var person = new Person()
+            {
+                Id = 1,
+                FirstName = "Bruce",
+                LastName = "Willis",
+                Email = "bwillis@gmail.com",
+                PhoneNumber = "214-345-9999",
+                BirthDate = new DateTime(1970, 11, 14)
+            };
+
+            _peopleService = Substitute.For<IPeopleService>();
+            _peopleService.GetAll().Returns(new List<Person> { person });
+           var validator = BuildPersonValidator();
+
+            //act
+            var result = validator.Validate(person);
+
+            //assert
+            result.IsValid.Should().BeTrue();
+        }
+
+         [Fact]
+        public void GivenDifferentPersonExistsWithSameEmail_WhenValidate_ShouldFailWithError()
+        {
+            var personInDb = new Person()
+            {
+                Id = 1,
+                FirstName = "Bruce",
+                LastName = "Willis",
+                Email = "brianw@gmail.com",
+                PhoneNumber = "214-345-9999",
+                BirthDate = new DateTime(1970, 11, 14)
+            };
+
+            _peopleService = Substitute.For<IPeopleService>();
+            _peopleService.GetAll().Returns(new List<Person> { personInDb });
+            var validator = BuildPersonValidator();
+
+            var newPerson = new Person()
+            {
+                Id = 4,
+                FirstName = "Brian",
+                LastName = "Walker",
+                Email = "brianw@gmail.com",
+                PhoneNumber = "214-345-3456",
+                BirthDate = new DateTime(1972, 8, 21)
+            };
+
+            //act
+            var result = validator.Validate(newPerson);
+
+            //assert
+            result.Errors.Should().NotBeEmpty();
+            result.Errors.First().ErrorCode.Should().Be(PersonValidator.ErrorCode.EmailNotUnique.ToString());
         }
 
         private PersonValidator BuildPersonValidator()

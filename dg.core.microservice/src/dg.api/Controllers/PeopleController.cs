@@ -63,17 +63,42 @@ namespace dg.api.controllers
             return await AddPersonImpl(person);
         }
 
+        [HttpPut("people")]
+        [ValidateInput]
+        public async Task<IActionResult> Update([FromBody]Person person)
+        {
+            var result = await Task.Factory.StartNew(() =>
+            {
+                var personInDb = _peopleService.Update(person);
+                return personInDb;
+            });
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+
         // Validation solution 2 - validation via registered IActionFilter (ValidateInputFilter) in Startup.ConfigureServices()
         [HttpPost("people2")]
         public async Task<IActionResult> AddPerson2([FromBody] Person person)
         {
-            return await AddPersonImpl(person);
+            return  Ok(person);
+        }
+
+        [HttpPut("people2")]
+        public async Task<IActionResult> UpdatePerson2([FromBody] Person person)
+        {
+            return Ok(person);
         }
 
 
         // Validation solution 3 - explict call to validator
         [HttpPost("people3")]
-        public async Task<IActionResult> AddPerson1([FromBody] Person person)
+        public async Task<IActionResult> AddPerson3([FromBody] Person person)
         {
             var validationResult = new PersonValidator(_peopleService).Validate(person);
             if (!validationResult.IsValid)
@@ -81,7 +106,7 @@ namespace dg.api.controllers
                 return new BadRequestObjectResult(validationResult);
             }
 
-            return await AddPersonImpl(person);
+            return Ok(person);
         }
 
         private async Task<IActionResult> AddPersonImpl(Person p)
@@ -102,24 +127,6 @@ namespace dg.api.controllers
             {
                 return StatusCode(StatusCodes.Status409Conflict);  // 409 - duplicate 
             }
-            return Ok(result);
-        }
-
-        [HttpPut("people")]
-        [ValidateInput]
-        public async Task<IActionResult> Update([FromBody]Person person)
-        {
-            var result = await Task.Factory.StartNew(() =>
-            {
-                var personInDb = _peopleService.Update(person);
-                return personInDb;
-            });
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
             return Ok(result);
         }
 

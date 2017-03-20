@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+
 using FluentValidation.Results;
+using FluentAssertions;
+using NSubstitute;
 using Xunit;
+
+using dg.common.validation;
 using dg.contract;
 using dg.validator;
-using System.Net;
-using Microsoft.Extensions.DependencyInjection;
-using dg.common.validation;
+using dg.test.infrastructure;
 
 namespace dg.unittest.api
 {
@@ -18,21 +24,90 @@ namespace dg.unittest.api
         public ApiValidateInputFilterTest(TestServerfixtureForValdateInputFilter fixture)
         {
             _fixture = fixture;
-            _fixture.ConfigureMvcForValidateInputFilter<PersonValidator>();
+            //     _fixture.ConfigureMvcForValidateInputFilter<PersonValidator>();
+        }
+        public static IEnumerable<object> HttpActions
+        {
+            get
+            {
+                return new object[]
+                {
+                     new object[] { "POST" } ,
+                     new object[] { "PUT"  }
+               };
+            }
         }
 
-        [Fact]
-        public async Task WhenInvokedWithInvalidContract_ShouldReturnBadRequest_WithErrors()
+        [Theory, MemberData("HttpActions")]
+        public async Task WhenPostOrPut_WithValidPerson_ShouldReturnOk(string httpAction)
+        {
+            try
+            {
+                var p = new Person()
+                {
+                    Id = 999,
+                    FirstName = "Robert",
+                    LastName = "Willis",
+                    Email = "bw@aol.com",
+                    PhoneNumber = "444-222-3434",
+                    BirthDate = new DateTime(1965, 10, 10),
+                };
+
+                var response = await _fixture.Client.PostOrPutAsync("people2", p, httpAction);
+
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                throw;
+            }
+        }
+
+        [Theory, MemberData("HttpActions")]
+        public async Task WhenPostOrPut_WithInvalidFirstName_ShouldReturnBadRequest_WithErrors(string httpAction)
         {
             try
             {
                 var p = new Person()
                 {
                     FirstName = "supercalifragilisticexpialidocious",
-                    LastName = "Willis"
+                    LastName = "Willis",
+                    Email = "bw@aol.com",
+                    PhoneNumber = "444-222-3434",
+                    BirthDate = new DateTime(1965, 10, 10),
                 };
 
-                var response = await _fixture.Client.PostAsync("people2", _fixture.BuildRequestContent(p));
+                var response = await _fixture.Client.PostOrPutAsync("people2", p, httpAction);
+
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                ValidationResult result = _fixture.GetValidationResult(response);
+                result.IsValid.Should().BeFalse();
+                result.Errors.First().ErrorCode.Should().Be(PersonValidator.ErrorCode.FirstNameInvalidLength.ToString());
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                throw;
+            }
+        }
+
+        [Theory, MemberData("HttpActions")]
+        public async Task WhenPostOrPut_WithNonUnique_ShouldReturnBadRequest_WithErrors(string httpAction)
+        {
+            try
+            {
+                var p = new Person()
+                {
+                    Id = 999,
+                    FirstName = "supercalifragilisticexpialidocious",
+                    LastName = "Willis",
+                    Email = "somebody1@aol.com",   // this is a dup email, see ConfigurePeopleService()
+                    PhoneNumber = "444-222-3434",
+                    BirthDate = new DateTime(1965, 10, 10),
+                };
+
+                var response = await _fixture.Client.PostOrPutAsync("people2", p, httpAction);
 
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 ValidationResult result = _fixture.GetValidationResult(response);
@@ -52,9 +127,7 @@ namespace dg.unittest.api
     {
         public override void ConfigureValidation(IServiceCollection services)
         {
-            services.AddValidateInputFilter<PersonValidator>();
+            ConfigureMvcForValidateInputFilter<PersonValidator>();
         }
     }
-
-
 }
