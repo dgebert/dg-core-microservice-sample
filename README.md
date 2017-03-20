@@ -36,13 +36,14 @@ If you install Visual Studio 2017, all .NET Core components are included
 
 ### 3. Download solution or clone repo
 
-### 4. Publish `db.sqldatabase` project to a SQL Server instance.  You will need to change the connection string
-in these projects:  `dg.api` and `dg.api.integrationtest`.
+### 4. Publish `db.sqldatabase` project to a SQL Server instance.  
+You will need to change the connection string in these projects:  `dg.api` and `dg.api.integrationtest`.
 
 ### 5. Run all unit and integration tests within the `test` folder.
 
 See README.md in root folder for more details of the microservice architecture and ASP.NET Core features.
 
-### ^. Install Document DB Emulator 
+### 6. Install Document DB Emulator 
 
-[Document DB Emulator](https://docs.microsoft.com/en-us/azure/documentdb/documentdb-nosql-local-emulator)
+Site:  [Document DB Emulator](https://docs.microsoft.com/en-us/azure/documentdb/documentdb-nosql-local-emulator)
+ 
