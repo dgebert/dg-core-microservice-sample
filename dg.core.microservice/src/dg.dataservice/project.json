@@ -7,6 +7,8 @@
     "dg.repository": "1.0.0-*"
   },
 
+
+
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"
