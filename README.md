@@ -43,13 +43,6 @@ in these projects:  `dg.api` and `dg.api.integrationtest`.
 
 See README.md in root folder for more details of the microservice architecture and ASP.NET Core features.
 
-### Document DB Emulator
+### ^. Install Document DB Emulator 
 
 [Document DB Emulator](https://docs.microsoft.com/en-us/azure/documentdb/documentdb-nosql-local-emulator)
-"The Azure DocumentDB Emulator provides a local environment that emulates the Azure DocumentDB service for development purposes. Using the DocumentDB Emulator, you can develop and test your application locally, without creating an Azure subscription or incurring any costs. When you're satisfied with how your application is working in the DocumentDB Emulator, you can switch to using an Azure DocumentDB account in the cloud."
-
-The DocumentDB Emulator provides a high-fidelity emulation of the DocumentDB service. It supports identical functionality as Azure DocumentDB, including support for creating and querying JSON documents, provisioning and scaling collections, and executing stored procedures and triggers. You can develop and test applications using the DocumentDB Emulator, and deploy them to Azure at global scale by just making a single configuration change.
-
-You can use any supported DocumentDB SDK or the DocumentDB REST API to interact with the emulator, as well as existing tools such as the DocumentDB data migration tool and DocumentDB studio.  You can even migrate data between the DocumentDB emulator and the Azure DocumentDB service.
-
-While we created a high-fidelity local emulation of the actual DocumentDB service, the implementation of the DocumentDB emulator is different than that of the service. For example, the DocumentDB Emulator uses standard OS components such as the local file system for persistence, and HTTPS protocol stack for connectivity. This means that some functionality that relies on Azure infrastructure like global replication, single-digit millisecond latency for reads/writes, and tunable consistency levels are not available via the DocumentDB Emulator.
