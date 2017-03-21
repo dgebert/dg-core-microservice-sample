@@ -1,9 +1,9 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Microsoft.Azure.DocumentDB.Core": "1.1.1"
-   
+    "Microsoft.Azure.DocumentDB.Core": "1.1.1",
+    "System.Linq.Expressions": "4.3.0"
   },
 
   
