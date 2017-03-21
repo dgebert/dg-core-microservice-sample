@@ -59,22 +59,24 @@ namespace dg.unittest.api
             Client = Server.CreateClient();
             Client.BaseAddress = new Uri(@"http://localhost:5000/");
 
-        //    TestDbConnection();
+            TestDbConnection();
         }
        
         private void TestDbConnection()
         {
-            using (var db = GetDb())
+            try
             {
-                try
+                using (var db = GetDb())
                 {
+
                     db.Database.GetDbConnection().Open();
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Invalid connection string - check appSettings and your target db");
-                    throw ex;
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid connection string? - check appSettings and your target db");
+                Console.WriteLine(ex.ToString());
+                throw;
             }
         }
 
