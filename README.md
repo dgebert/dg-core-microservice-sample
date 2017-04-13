@@ -45,5 +45,7 @@ See README.md in root folder for more details of the microservice architecture a
 
 ### 6. Install Document DB Emulator 
 
+(Work in Progress)
+
 Site:  [Document DB Emulator](https://docs.microsoft.com/en-us/azure/documentdb/documentdb-nosql-local-emulator)
  
