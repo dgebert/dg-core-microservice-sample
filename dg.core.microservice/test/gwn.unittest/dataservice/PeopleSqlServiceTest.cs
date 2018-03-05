@@ -60,7 +60,7 @@ namespace gwn.unitest.dataservice
 
                 var person = service.Get(id);
                 person.Should().NotBeNull();
-                person.Should().BeEquivalentTo(p);
+                person.Should().BeEquivalentTo(p.ToPersonContract());
             }
         }
 
