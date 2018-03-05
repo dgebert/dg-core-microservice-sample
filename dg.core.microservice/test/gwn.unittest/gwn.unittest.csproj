@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="controller\" />
+    <Folder Include="dataservice\" />
+    <Folder Include="validation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.1.2" />
+    <PackageReference Include="FluentValidation" Version="7.5.0" />
+    <PackageReference Include="GenFu" Version="1.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.console" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\gwn.api\gwn.api.csproj" />
+    <ProjectReference Include="..\..\src\gwn.common.validation\gwn.common.validation.csproj" />
+    <ProjectReference Include="..\..\src\gwn.contract\gwn.contract.csproj" />
+    <ProjectReference Include="..\..\src\gwn.dataservice\gwn.dataservice.csproj" />
+    <ProjectReference Include="..\..\src\gwn.validation\gwn.validation.csproj" />
+    <ProjectReference Include="..\gwn.common.test\gwn.common.test.csproj" />
+  </ItemGroup>
+
+</Project>
