@@ -32,32 +32,31 @@ namespace gwn.api.integrationtest
         {
             var builder = new ConfigurationBuilder()
                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                   .SetBasePath(Directory.GetCurrentDirectory())
                   .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            // TODO:  get this working.... Works in Xunit test runner but not in Resharper test runner ??? 
-            //ConnectionString = Configuration[ConnStringKey];
-            _connectionString = @"server=DGEBERT\SQLEXPRESS; Database = people; Integrated Security = true";
-
+            _connectionString = Configuration[ConnStringKey];
             if (string.IsNullOrWhiteSpace(_connectionString))
             {
                 throw new ArgumentException("Cannot find connection string - check appsettings or where it is (not) located");
             }
 
-            var webHostBuilder = new WebHostBuilder()
-                    .UseEnvironment("Testing")
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseConfiguration(Configuration)
-                    .UseKestrel()
-               //     .UseStartup<dg.api.Startup>()
-                    // Configure
-                    .Configure(app => app.UseMvc())
-                    .ConfigureServices(ConfigureServices);
-            
-            Server = new TestServer(webHostBuilder);
+            //var webHostBuilder = new WebHostBuilder()
+            //        .UseEnvironment("Testing")
+            //        .UseContentRoot(Directory.GetCurrentDirectory())
+            //        .UseConfiguration(Configuration)
+            //        .UseKestrel()
+            //        .Configure(app => app.UseMvc())
+            //        .ConfigureServices(ConfigureServices);
+            //Server = new TestServer(webHostBuilder);
+            //Client = Server.CreateClient();
+
+
+            Server = new TestServer(new WebHostBuilder()
+                         .UseStartup<Startup>());
             Client = Server.CreateClient();
-            Client.BaseAddress = new Uri(@"http://localhost:5000/");
 
             TestDbConnection();
         }
@@ -68,7 +67,6 @@ namespace gwn.api.integrationtest
             {
                 using (var db = GetDb())
                 {
-
                     db.Database.GetDbConnection().Open();
                 }
             }
@@ -90,14 +88,8 @@ namespace gwn.api.integrationtest
 
         public void Dispose()
         {
-            if (Client != null)
-            {
-                Client.Dispose();
-            }
-            if (Server != null)
-            {
-                Server.Dispose();
-            }
+            Client?.Dispose();
+            Server?.Dispose();
         }
 
 

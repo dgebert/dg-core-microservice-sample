@@ -89,6 +89,12 @@ namespace gwn.validation
 
         }
 
+        // for debugging
+        public override ValidationResult Validate(ValidationContext<Person> context)
+        {
+            return base.Validate(context);
+        }
+
         private IRuleBuilderOptions<Person, DateTime> RuleForBirthDate()
         {
             return RuleFor(p => p.BirthDate)

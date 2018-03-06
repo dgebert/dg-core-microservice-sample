@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -23,7 +24,6 @@ namespace gwn.api.controllers
             _peopleService = service;
          //   _logger = logger;
         }
-
 
         [HttpGet("people")]
         public async Task<IActionResult> GetAllPeople()

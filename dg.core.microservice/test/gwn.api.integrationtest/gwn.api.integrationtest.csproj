@@ -17,15 +17,23 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\gwn.api\gwn.api.csproj" />
     <ProjectReference Include="..\..\src\gwn.common.validation\gwn.common.validation.csproj" />
     <ProjectReference Include="..\..\src\gwn.contract\gwn.contract.csproj" />
     <ProjectReference Include="..\..\src\gwn.dataservice\gwn.dataservice.csproj" />
     <ProjectReference Include="..\..\src\gwn.entityframework\gwn.entityframework.csproj" />
     <ProjectReference Include="..\..\src\gwn.validation\gwn.validation.csproj" />
     <ProjectReference Include="..\gwn.common.test\gwn.common.test.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
