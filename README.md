@@ -35,8 +35,9 @@ Here are some great place to start:
 
 ### 3. Download solution or clone repo
 
-### 4. Publish `db.sqldatabase` project to a SQL Server instance.  
-You will need to change the connection string in these projects:  `dg.api` and `dg.api.integrationtest`.
+### 4. Publish `db.sqldatabase` project to a SQL Server instance. 
+- This will create database and tables from scripts in project
+>Note: You will need to change the connection string in these projects:  `dg.api` and `dg.api.integrationtest`.
 
 ### 5. Run all unit and integration tests within the `test` folder.
 
