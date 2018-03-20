@@ -27,7 +27,7 @@ Here are some great place to start:
 
 [Visual Studio Downloads](https://www.visualstudio.com/downloads/)
 
-### 2. install [.NET Core 2.0.14 SDK](https://www.microsoft.com/net/download/all)
+### 2. install [.NET Core 2.1.4 SDK](https://www.microsoft.com/net/download/all)
 
  If you're adventurous, check out these IDE's:
 - [Visual Studio Code](https://code.visualstudio.com/)
