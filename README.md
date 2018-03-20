@@ -18,17 +18,16 @@ There is a vast amount of technology resources online. The following is a short 
 
 ## Getting Started
 
-Here is a great place to start: [.NET Core on github](https://dotnet.github.io/)
+Here are some great place to start: 
+[Get started with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/get-started)
+[.NET Core on github](https://dotnet.github.io/)
+[Prerequisites for .NET Core on Windows](https://docs.microsoft.com/en-us/dotnet/core/windows-prerequisites?tabs=netcore2x)
 
-### 1.  Install IDE - Visual Studio 2015 or 2017
->Note:  .NET Core development differs considerably between these two IDE's.  Visual Studio 2017 contains several new and improved features. The following resources best explain all this:
-- [What's new in Visual Studio 2017](https://www.visualstudio.com/vs/whatsnew/)
-- [Visual Studio 2017](https://www.visualstudio.com/en-us/news/releasenotes/vs2017-relnotes)  Release Notes
-- [Visual Studio 2017 RC review: a look at what’s new and improved](https://raygun.com/blog/2016/12/visual-studio-2017-rc-review/)
+### 1.  Install IDE - Visual Studio 2017 or Visual Studio Code (you'll need C# plugin for VSCode)
 
-If you install Visual Studio 2017, all .NET Core components are included
+[Visual Studio Downloads](https://www.visualstudio.com/downloads/)
 
-### 2. If you are running Visual Studio 2015 on Windows, install [.NET Core 1.1.1 SDK](https://www.microsoft.com/net/core#windowscmd)
+### 2. install [.NET Core 2.0.14 SDK](https://www.microsoft.com/net/download/all)
 
  If you're adventurous, check out these IDE's:
 - [Visual Studio Code](https://code.visualstudio.com/)
@@ -43,9 +42,4 @@ You will need to change the connection string in these projects:  `dg.api` and `
 
 See README.md in root folder for more details of the microservice architecture and ASP.NET Core features.
 
-### 6. Install Document DB Emulator 
 
-(Work in Progress)
-
-Site:  [Document DB Emulator](https://docs.microsoft.com/en-us/azure/documentdb/documentdb-nosql-local-emulator)
- 
