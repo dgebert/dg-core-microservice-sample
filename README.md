@@ -19,9 +19,9 @@ There is a vast amount of technology resources online. The following is a short 
 ## Getting Started
 
 Here are some great place to start: 
-[Get started with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/get-started)
-[.NET Core on github](https://dotnet.github.io/)
-[Prerequisites for .NET Core on Windows](https://docs.microsoft.com/en-us/dotnet/core/windows-prerequisites?tabs=netcore2x)
+- [Get started with .NET Core](https://docs.microsoft.com/en-us/dotnet/core/get-started)
+- [.NET Core on github](https://dotnet.github.io/)
+- [Prerequisites for .NET Core on Windows](https://docs.microsoft.com/en-us/dotnet/core/windows-prerequisites?tabs=netcore2x)
 
 ### 1.  Install IDE - Visual Studio 2017 or Visual Studio Code (you'll need C# plugin for VSCode)
 
