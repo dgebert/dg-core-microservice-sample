@@ -37,7 +37,7 @@ Here are some great place to start:
 
 ### 4. Publish `db.sqldatabase` project to a SQL Server instance with 'Contacts' as name of database. 
 - This will create database and tables from scripts in project
->Note: You will need to change the db connection string to point to this sql server instance and dbin `appsettings.json in these projects:  `dg.api` and `dg.api.integrationtest`.
+>Note: You will need to change the db connection string to point to this sql server instance and db in `appsettings.json` in these projects:  `dg.api` and `dg.api.integrationtest`.
 
 ### 5. Run all unit and integration tests within the `test` folder.
 
